@@ -12,19 +12,22 @@ module.exports = (server, req, res) ->
     }
 
 
-  server.models.User.find { username: username }, (users) ->
-    if !users? || users.length == 0
+  hashsalt = require('password-hash-and-salt')
+
+  server.models.User.findOne { username: username }, (err, user) ->
+    if err
+      return server.error err
+
+    unless user
       return res.json {
         error: "User not found"
       }
-
-    user = users[0]
 
     db_password = user.password
 
     hashsalt(password).verifyAgainst db_password, (err, ok) ->
       if err
-        return Server.error err
+        return server.error err
 
       res.json {
         login: ok

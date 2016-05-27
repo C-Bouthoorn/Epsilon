@@ -3,14 +3,11 @@ CoffeeScript = require('coffee-script')
 CSON = require('cson')
 path = require('path')
 util = require('util')
-# MongoClient = require('mongodb').MongoClient
 mongoose = require('mongoose')
 bodyParser = require('body-parser')
-hashsalt = require('password-hash-and-salt')
+
 
 app = express()
-
-
 Server = {}
 
 ## Config stuff
@@ -64,9 +61,11 @@ if Server.config.database && Server.config.database.enabled
   Server.mdb.once 'open', ->
     Server.log "Database connected"
 
+  # Create schemas and models
   Server.schemas = {
     User: mongoose.Schema {
-      name: String
+      username: String
+      password: String
     }
   }
 

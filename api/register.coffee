@@ -11,20 +11,23 @@ module.exports = (server, req, res) ->
       error: "Database not ready"
     }
 
+
+  hashsalt = require('password-hash-and-salt')
+
   hashsalt(password).hash (err, hashpassword) ->
     if err
-      return Server.error err
+      return server.error err
 
 
-    user = new Server.models.User {
+    user = new server.models.User {
       username: username
       password: hashpassword
     }
 
     user.save (err) ->
       if err
-        return Server.error err
+        return server.error err
 
-  res.json {
-    done: true
-  }
+      res.json {
+        done: true
+      }

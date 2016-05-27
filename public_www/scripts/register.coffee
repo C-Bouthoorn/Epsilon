@@ -16,3 +16,8 @@
 
   $.post "/api/register", registerdata, (data) ->
     console.log data
+
+    if data.done
+      alert "You succesfully registered!"
+    else
+      alert "You failed to register!"

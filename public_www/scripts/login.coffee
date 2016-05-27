@@ -11,3 +11,8 @@
 
   $.post "/api/login", logindata, (data) ->
     console.log data
+
+    if data.login
+      alert "You succesfully logged in!"
+    else
+      alert "You failed to log in!"
