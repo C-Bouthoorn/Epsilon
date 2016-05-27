@@ -1,7 +1,7 @@
 {
   "name": "epsilon",
   "version": "1.0.0",
-  "description": "Een management systeem voor Delta",
+  "description": "none",
   "main": "server.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
