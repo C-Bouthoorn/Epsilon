@@ -1,0 +1,38 @@
+# Server settings
+port: 8000
+wwwroot: "./public_www"
+
+# Database settings
+database:
+  enabled: true
+
+  url: "mongodb://localhost/test"
+
+
+# Logging settings
+log:
+  enabled: true
+
+  timeformat: "DD-MM-YYYY HH:mm:ss.SSS"
+
+  access:
+    file: "log/access.log"
+    stdout: false
+
+    disable: [
+      "::ffff:84.107.251.46"
+    ]
+
+    friends: {
+      "::ffff:213.93.28.7": "Gabriëlle"
+      "::ffff:80.60.110.83": "Marten"
+    }
+
+    format: "[:time:] :ip: (:name:) - :useragent: || :method: ':url:'"
+
+  error:
+    file: "log/error.log"
+
+  server:
+    file: "log/server.log"
+    stdout: true
