@@ -1,16 +1,34 @@
 <h2>Register</h2>
 <form action="#" onsubmit="register(this, event)">
-  <div class="form-group">
-    <label for="username"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
-    <input type="text" class="form-control" id="username" value="username">
+  <div class="form-group has-error has-feedback">
+    <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
+    <input
+      type="text" class="form-control" required id="username"
+      onkeyup="validateUsername(this)" onload="validateUsername(this)"
+      ng-model="epsilonCtrl.username" placeholder="username">
+
+    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
   </div>
-  <div class="form-group">
-    <label for="password"><i class="fa fa-key" aria-hidden="true"></i> Password</label>
-    <input type="password" class="form-control" id="password" value="password">
+
+  <div class="form-group has-error has-feedback">
+    <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label>
+    <input
+      type="password" class="form-control" id="password"
+      onkeyup="validatePassword(this)" onload="validatePassword(this)"
+      ng-model="epsilonCtrl.password" placeholder="password">
+
+    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
   </div>
-  <div class="form-group">
-    <label for="password-again"><i class="fa fa-key" aria-hidden="true"></i> Password again</label>
-    <input type="password" class="form-control" id="password-again" value="password">
+
+  <div class="form-group has-error has-feedback">
+    <label for="password-again" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password again</label>
+    <input
+      type="password" class="form-control" id="password-again"
+      onkeyup="validatePassword(this)" onload="validatePassword(this)"
+      ng-model="epsilonCtrl.password" placeholder="password">
+
+    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
   </div>
+
   <input type="submit" class="btn btn-primary" value="Register">
 </form>

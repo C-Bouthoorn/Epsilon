@@ -9,6 +9,12 @@
     password: sha256(password)
   }
 
+  unless checkUsername username
+    return alert "Invalid username"
+
+  unless checkPassword password
+    return alert "Invalid password"
+
   $.post "/api/login", logindata, (data) ->
     console.log data
 

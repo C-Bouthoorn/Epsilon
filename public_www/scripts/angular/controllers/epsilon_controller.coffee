@@ -18,7 +18,7 @@ angular.module('epsilonApp')
       $location.path tabs[newTab]
 
       # Remove focus from other tab
-      
+
 
     epsilonCtrl.swipeRight = ->
       currentTab = tabs.indexOf($location.path())
