@@ -1,5 +1,18 @@
 # Server settings
-port: 8000
+http:
+  enabled: true
+  port: 8000
+
+https:
+  enabled: true
+  port: 8001
+
+  pem:
+    key: './keys/key.pem'
+    cert: './keys/cert.pem'
+    passphrase: 'Charlie'
+
+
 wwwroot: "./public_www"
 
 # Database settings

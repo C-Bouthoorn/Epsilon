@@ -4,8 +4,12 @@ angular.module('epsilonApp').config(function($routeProvider) {
     templateUrl: "/templates/index.html"
   }).when('/login', {
     templateUrl: "/templates/login.html"
+  }).when('/lost-password', {
+    templateUrl: "/templates/lost-password.html"
   }).when('/register', {
     templateUrl: "/templates/register.html"
+  }).when('/about', {
+    templateUrl: "/templates/about.html"
   }).otherwise({
     redirectTo: '/'
   });

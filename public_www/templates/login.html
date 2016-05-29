@@ -1,4 +1,4 @@
-<h2>Login</h2>
+<h2></h2>
 <form action="#" onsubmit="login(this, event)">
   <input type="hidden" id="formtype" value="login">
 
@@ -9,7 +9,7 @@
       <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
       <input
         type="text" class="form-control" id="username" ng-model="epsilonCtrl.login_username"
-        required autocapitalize='off' autocorrect='off'
+        required autocapitalize='none' autocorrect='off'
         onkeyup="validateUsername($(this))" onload="validateUsername($(this))"
         placeholder="username">
     </div>
@@ -24,7 +24,7 @@
       <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
       <input
         type="password" class="form-control" id="password" ng-model="epsilonCtrl.login_password"
-        required autocapitalize='off' autocorrect='off'
+        required autocapitalize='none' autocorrect='off'
         onkeyup="validatePassword($(this))" onload="validatePassword($(this))"
         placeholder="password">
     </div>
@@ -33,6 +33,9 @@
   </div>
 
   <input type="submit" class="btn btn-primary" value="Login">
+  <!-- <a href="#/lost-password" class="btn btn-info">Lost password?</a> -->
+
+  <hr>
 
   <script>
     // NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!

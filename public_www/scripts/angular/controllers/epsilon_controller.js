@@ -2,12 +2,22 @@
 angular.module('epsilonApp').controller('epsilonController', function($location, $scope) {
   var epsilonCtrl, tabs;
   epsilonCtrl = this;
-  tabs = ["/", "/login", "/register"];
+  tabs = ["/", "/login", "/register", "/about"];
   epsilonCtrl.isActiveTab = function(tab) {
     return $location.path() === tab;
   };
+  epsilonCtrl.tabClass = function(tab) {
+    if (epsilonCtrl.isActiveTab(tab)) {
+      return 'active';
+    } else {
+      return '';
+    }
+  };
   epsilonCtrl.swipeLeft = function() {
     var currentTab, newTab;
+    if (!isMobile.any) {
+      return;
+    }
     currentTab = tabs.indexOf($location.path());
     newTab = currentTab + 1;
     if (newTab >= tabs.length) {
@@ -17,6 +27,9 @@ angular.module('epsilonApp').controller('epsilonController', function($location,
   };
   epsilonCtrl.swipeRight = function() {
     var currentTab, newTab;
+    if (!isMobile.any) {
+      return;
+    }
     currentTab = tabs.indexOf($location.path());
     newTab = currentTab - 1;
     if (newTab < 0) {

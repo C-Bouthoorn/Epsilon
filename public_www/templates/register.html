@@ -1,4 +1,4 @@
-<h2>Register</h2>
+<h2></h2>
 <form action="#" onsubmit="register(this, event)" ng-model="epsilonCtrl.register_form">
   <input type="hidden" id="formtype" value="register">
 
@@ -11,7 +11,7 @@
       <input
         type="text" class="form-control" id="username" ng-model="epsilonCtrl.register_username"
         required autocapitalize='off' autocorrect='off'
-        onkeyup="validateUsername($(this), true)" onload="validateUsername($(this))"
+        onkeyup="validateUsername($(this), true)" onload="validateUsername($(this), true)"
         placeholder="username">
     </div>
 

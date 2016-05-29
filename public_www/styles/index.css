@@ -3,6 +3,13 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  /*color: #066;*/
   color: #626;
+  /* color: #b7b; */
+}
+
+hr {
+  width: 95%;
+  height: 1px;
+  background-color: #ccc;
+  text-align: center;
 }

@@ -3,12 +3,21 @@ angular.module('epsilonApp')
   .controller 'epsilonController', ($location, $scope) ->
     epsilonCtrl = this
 
-    tabs = [ "/", "/login", "/register" ]
+    tabs = [ "/", "/login", "/register", "/about" ]
 
     epsilonCtrl.isActiveTab = (tab) ->
       return $location.path() == tab
 
+    epsilonCtrl.tabClass = (tab) ->
+      if epsilonCtrl.isActiveTab tab
+        return 'active'
+      else
+        return ''
+
     epsilonCtrl.swipeLeft = ->
+      # Disable on desktop
+      return unless isMobile.any
+
       currentTab = tabs.indexOf($location.path())
       newTab = currentTab + 1
 
@@ -21,6 +30,9 @@ angular.module('epsilonApp')
 
 
     epsilonCtrl.swipeRight = ->
+      # Disable on desktop
+      return unless isMobile.any
+
       currentTab = tabs.indexOf($location.path())
       newTab = currentTab - 1
 

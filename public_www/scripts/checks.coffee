@@ -44,6 +44,8 @@
 
 
 @validateUsername = (elem, checkAvailable=false) ->
+  return if elem.val() is undefined
+
   username = elem.val()
 
   validate = (valid) ->
@@ -72,6 +74,8 @@
     validate true
 
 @validatePassword = (elem, checkagain=false) ->
+  return if elem.val() is undefined
+
   password = elem.val()
 
   if checkPassword password
@@ -83,6 +87,8 @@
     validatePasswordAgain $('#password-again')
 
 @validatePasswordAgain = (elem) ->
+  return if elem.val() is undefined
+
   password = elem.val()
 
   if ( password == $('#password').val() ) && checkPassword password
@@ -96,6 +102,6 @@
   validatePassword $('#password')
 
 @validateRegister = ->
-  validateUsername $('#username')
+  validateUsername $('#username'), true
   validatePassword $('#password')
   validatePasswordAgain $('#password-again')

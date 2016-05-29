@@ -5,6 +5,8 @@ path = require('path')
 util = require('util')
 mongoose = require('mongoose')
 bodyParser = require('body-parser')
+https = require('https')
+fs = require('fs')
 
 
 app = express()
@@ -91,6 +93,14 @@ app.use '/', express.static "#{Server.config.wwwroot}/", {
   extensions: [ '.html' ]
 }
 
+# Set up HTTPS server
+if Server.config.https && Server.config.https.enabled
+  httpsserver = https.createServer {
+    key: fs.readFileSync(Server.config.https.pem.key, 'utf8')
+    cert: fs.readFileSync(Server.config.https.pem.cert, 'utf8')
+    passphrase: Server.config.https.pem.passphrase
+  }, app
+
 ## API stuff
 
 app.all '/api/:func?', (req, res) ->
@@ -114,6 +124,10 @@ app.all '/api/:func?', (req, res) ->
   api(Server, req, res)
 
 
+if Server.config.http && Server.config.http.enabled
+  app.listen (Server.config.http.port || 80), ->
+    Server.log "HTTP server is now listening on port #{Server.config.http.port}"
 
-app.listen (Server.config.port || 80), ->
-  Server.log "Server is now listening on port #{Server.config.port}"
+if Server.config.https && Server.config.https.enabled
+  httpsserver.listen (Server.config.https.port || 443), ->
+    Server.log "HTTPS server is now listening on port #{Server.config.https.port}"

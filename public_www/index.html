@@ -9,14 +9,18 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#626">
+    <meta name="theme-color" content="#662266">
     <link rel="icon" sizes="64x64" href="favicon.ico">
 
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
+    <!-- <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css" crossorigin="anonymous"> -->
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic&subset=latin" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/styles/index.css">
 
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha384-rY/jv8mMhqDabXSo+UCggqKtdmBfd3qC2/KvyTDNQ6PcUJXaxK1tMepoQda4g5vB" crossorigin="anonymous"></script>
 
@@ -40,15 +44,12 @@
     <script src="https://cdn.rawgit.com/kaimallea/isMobile/dc3bc3e60c5b365cc8a2a64d00118910806b6e31/isMobile.min.js" integrity="sha384-PxxEjxngVfSig320D2/ah5QNwLnxIUjUja6CMp6GNArkZ0BHxNLgxchl9eZQo+ur" crossorigin="anonymous"></script>
 
 
-    <link rel="stylesheet" href="/styles/index.css">
+    <!-- NOTE: Development build only! Convert to JS in production build -->
+    <script type="text/javascript" src="https://cdn.rawgit.com/jashkenas/coffeescript/7c2f348a6353a4d29e6cd178c3ea79badd71c729/extras/coffee-script.js" integrity="sha384-4o9gGEksu6GZOkMB+8C7J8/KMPFRKN0MoaWPJ5y+vW1bB+2KJiE7OrDtrak6HLBW" crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="/scripts/angular/app.js"></script>
     <script type="text/javascript" src="/scripts/angular/routes.js"></script>
     <script type="text/javascript" src="/scripts/angular/controllers/epsilon_controller.js"></script>
-
-
-    <!-- NOTE: Development build only! Convert to JS in production build -->
-    <script type="text/javascript" src="http://coffeescript.org/extras/coffee-script.js"></script>
 
     <script type="text/coffeescript" src="/scripts/checks.coffee"></script>
     <script type="text/coffeescript" src="/scripts/login.coffee"></script>
@@ -60,9 +61,10 @@
     <section class="container">
       <nav>
         <ul class="nav nav-tabs" role="tablist">
-          <li class="{{epsilonCtrl.isActiveTab('/') ? 'active' : ''}}"><a href="#/">HOME</a></li>
-          <li class="{{epsilonCtrl.isActiveTab('/login') ? 'active' : ''}}"><a href="#/login">LOGIN</a></li>
-          <li class="{{epsilonCtrl.isActiveTab('/register') ? 'active' : ''}}"><a href="#/register">REGISTER</a></li>
+          <li class="{{epsilonCtrl.tabClass('/')}}"><a href="#/">home</a></li>
+          <li class="{{epsilonCtrl.tabClass('/login')}}"><a href="#/login">login</a></li>
+          <li class="{{epsilonCtrl.tabClass('/register')}}"><a href="#/register">register</a></li>
+          <li class="{{epsilonCtrl.tabClass('/about')}}"><a href="#/about">about</a></li>
         </ul>
       </nav>
 
