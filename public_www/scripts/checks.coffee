@@ -1,3 +1,5 @@
+@checkto=false
+
 @checkUsername = (username) ->
   return 4 <= username.length <= 64
 
@@ -5,43 +7,95 @@
   return 8 <= password.length
 
 
-@setValid = (elem) ->
-  elem.addClass 'has-success'
-  elem.removeClass 'has-error'
+@removeFaClasses = (elem) ->
+  elem.removeClass 'fa-check'
+  elem.removeClass 'fa-ban'
+  elem.removeClass 'fa-cog'
+  elem.removeClass 'fa-spin'
 
-  elem.children('.form-control-feedback').addClass 'fa-check'
-  elem.children('.form-control-feedback').removeClass 'fa-ban'
+  return elem
+
+@removeStatusClasses = (elem) ->
+  elem.removeClass 'has-success'
+  elem.removeClass 'has-error'
+  elem.removeClass 'has-warning'
+
+  return elem
+
+
+@setValid = (elem) ->
+  elem = elem.closest('.form-group')
+
+  removeStatusClasses(elem).addClass 'has-success'
+  removeFaClasses(elem.children '.form-control-feedback').addClass 'fa-check'
+
 
 @setInvalid = (elem) ->
-  elem.removeClass 'has-success'
-  elem.addClass 'has-error'
+  elem = elem.closest('.form-group')
 
-  elem.children('.form-control-feedback').removeClass 'fa-check'
-  elem.children('.form-control-feedback').addClass 'fa-ban'
+  removeStatusClasses(elem).addClass 'has-error'
+  removeFaClasses(elem.children '.form-control-feedback').addClass 'fa-ban'
+
+@setLoading = (elem) ->
+  elem = elem.closest('.form-group')
+
+  removeStatusClasses(elem).addClass 'has-warning'
+  removeFaClasses(elem.children '.form-control-feedback').addClass 'fa-cog fa-spin'
 
 
-@validateUsername = (elem) ->
-  username = $(elem).val()
+@validateUsername = (elem, checkAvailable=false) ->
+  username = elem.val()
 
-  if checkUsername username
-    setValid $(elem).closest('.form-group')
+  validate = (valid) ->
+    if valid
+      setValid elem
+    else
+      setInvalid elem
+
+
+  unless checkUsername username
+    validate false
+    return
+
+
+  if checkAvailable
+    setLoading elem
+
+    if @checkto
+      clearTimeout @checkto
+
+    @checkto = setTimeout (->
+      $.post '/api/register-available', { username: username }, (data) ->
+        validate(data.available isnt false)
+    ), 1000
   else
-    setInvalid $(elem).closest('.form-group')
+    validate true
 
-@validatePassword = (elem) ->
-  password = $(elem).val()
+@validatePassword = (elem, checkagain=false) ->
+  password = elem.val()
 
   if checkPassword password
-    setValid $(elem).closest('.form-group')
+    setValid elem
   else
-    setInvalid $(elem).closest('.form-group')
+    setInvalid elem
 
-$(document).ready ->
-  $('#username').keyup ->
-    validateUsername this
+  if checkagain
+    validatePasswordAgain $('#password-again')
 
-  $('#password').keyup ->
-    validatePassword this
+@validatePasswordAgain = (elem) ->
+  password = elem.val()
 
-  $('#password-again').keyup ->
-    validatePassword this
+  if ( password == $('#password').val() ) && checkPassword password
+    setValid elem
+  else
+    setInvalid elem
+
+
+@validateLogin = ->
+  validateUsername $('#username')
+  validatePassword $('#password')
+
+@validateRegister = ->
+  validateUsername $('#username')
+  validatePassword $('#password')
+  validatePasswordAgain $('#password-again')

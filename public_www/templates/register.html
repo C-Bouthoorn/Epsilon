@@ -1,34 +1,62 @@
 <h2>Register</h2>
-<form action="#" onsubmit="register(this, event)">
-  <div class="form-group has-error has-feedback">
-    <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
-    <input
-      type="text" class="form-control" required id="username"
-      onkeyup="validateUsername(this)" onload="validateUsername(this)"
-      ng-model="epsilonCtrl.username" placeholder="username">
+<form action="#" onsubmit="register(this, event)" ng-model="epsilonCtrl.register_form">
+  <input type="hidden" id="formtype" value="register">
 
-    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
+  <div class="form-group has-error has-feedback">
+    <!-- <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label> -->
+
+    <div class="input-group">
+      <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+
+      <input
+        type="text" class="form-control" id="username" ng-model="epsilonCtrl.register_username"
+        required autocapitalize='off' autocorrect='off'
+        onkeyup="validateUsername($(this), true)" onload="validateUsername($(this))"
+        placeholder="username">
+    </div>
+
+    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
   </div>
 
   <div class="form-group has-error has-feedback">
-    <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label>
-    <input
-      type="password" class="form-control" id="password"
-      onkeyup="validatePassword(this)" onload="validatePassword(this)"
-      ng-model="epsilonCtrl.password" placeholder="password">
+    <!-- <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label> -->
 
-    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
+    <div class="input-group">
+      <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+
+      <input
+        type="password" class="form-control" id="password" ng-model="epsilonCtrl.register_password"
+        required autocapitalize='off' autocorrect='off'
+        onkeyup="validatePassword($(this), true)" onload="validatePassword($(this), true)"
+        placeholder="password">
+    </div>
+
+    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
   </div>
 
   <div class="form-group has-error has-feedback">
-    <label for="password-again" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password again</label>
-    <input
-      type="password" class="form-control" id="password-again"
-      onkeyup="validatePassword(this)" onload="validatePassword(this)"
-      ng-model="epsilonCtrl.password" placeholder="password">
+    <!-- <label for="password-again" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password again</label> -->
 
-    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
+    <div class="input-group">
+      <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+      <input
+        type="password" class="form-control" id="password-again" ng-model="epsilonCtrl.register_password_again"
+        required autocapitalize='off' autocorrect='off'
+        onkeyup="validatePasswordAgain($(this))" onload="validatePasswordAgain($(this))"
+        placeholder="password again">
+    </div>
+
+    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
   </div>
 
   <input type="submit" class="btn btn-primary" value="Register">
+
+  <script>
+  // NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
+  //       Remove from production build
+  (function angready() {
+    if(typeof validateRegister !== 'undefined') setTimeout(validateRegister, 500);
+    else setTimeout(angready, 100);
+  })();
+  </script>
 </form>

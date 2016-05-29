@@ -10,6 +10,12 @@ bodyParser = require('body-parser')
 app = express()
 Server = {}
 
+## Just some functions
+rerequire = (modpath) ->
+  delete require.cache[path.resolve modpath]
+  return require modpath
+
+
 ## Config stuff
 
 Server.config = CSON.parseFile('config.cson')
@@ -92,12 +98,18 @@ app.all '/api/:func?', (req, res) ->
   api = require('./api/index')
 
   switch req.params.func
+
+    # NOTE: Using rerequire() because this is a development build
+    #       don't forget to remove in production
+
     when 'test'
-      api = require('./api/test')
+      api = rerequire('./api/test')
     when 'login'
-      api = require('./api/login')
+      api = rerequire('./api/login')
     when 'register'
-      api = require('./api/register')
+      api = rerequire('./api/register')
+    when 'register-available'
+      api = rerequire('./api/register-available')
 
   api(Server, req, res)
 

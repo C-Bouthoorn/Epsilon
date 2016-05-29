@@ -1,22 +1,45 @@
 <h2>Login</h2>
 <form action="#" onsubmit="login(this, event)">
-  <div class="form-group has-error has-feedback">
-    <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label>
-    <input
-      type="text" class="form-control" id="username"
-      onkeyup="validateUsername(this)" onload="validateUsername(this)"
-      ng-model="epsilonCtrl.username" placeholder="username">
+  <input type="hidden" id="formtype" value="login">
 
-    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
-  </div>
   <div class="form-group has-error has-feedback">
-    <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label>
-    <input
-      type="password" class="form-control" id="password"
-      onload="validatePassword(this)"
-      ng-model="epsilonCtrl.password" placeholder="password">
+    <!-- <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label> -->
 
-    <span class="form-control-feedback fa fa-ban" aria-hidden="true"></span>
+    <div class="input-group">
+      <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
+      <input
+        type="text" class="form-control" id="username" ng-model="epsilonCtrl.login_username"
+        required autocapitalize='off' autocorrect='off'
+        onkeyup="validateUsername($(this))" onload="validateUsername($(this))"
+        placeholder="username">
+    </div>
+
+    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
   </div>
+
+  <div class="form-group has-error has-feedback">
+    <!-- <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label> -->
+
+    <div class="input-group">
+      <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+      <input
+        type="password" class="form-control" id="password" ng-model="epsilonCtrl.login_password"
+        required autocapitalize='off' autocorrect='off'
+        onkeyup="validatePassword($(this))" onload="validatePassword($(this))"
+        placeholder="password">
+    </div>
+
+    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
+  </div>
+
   <input type="submit" class="btn btn-primary" value="Login">
+
+  <script>
+    // NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
+    //       Remove from production build
+    (function angready() {
+      if(typeof validateLogin !== 'undefined') setTimeout(validateLogin, 500);
+      else setTimeout(angready, 100);
+    })();
+  </script>
 </form>

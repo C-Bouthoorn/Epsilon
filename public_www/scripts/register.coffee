@@ -5,9 +5,14 @@
   password = $(form).find('#password').val()
   passwordagain = $(form).find('#password-again').val()
 
-  if password != passwordagain
-    alert "Passwords aren't equal"
-    return
+  unless checkUsername username
+    return alert "Invalid username"
+
+  unless checkPassword password
+    return alert "Invalid password"
+
+  unless password == passwordagain
+    return alert "Passwords aren't equal"
 
   registerdata = {
     username: username
