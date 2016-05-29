@@ -39,6 +39,7 @@ log:
     friends: {
       "::ffff:213.93.28.7": "Gabriëlle"
       "::ffff:80.60.110.83": "Marten"
+      "::ffff:85.150.254.59": "Jorrit"
     }
 
     format: "[:time:] :ip: (:name:) - :useragent: || :method: ':url:'"

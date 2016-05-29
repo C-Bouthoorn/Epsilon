@@ -1,4 +1,4 @@
-@checkto=false
+@checkto = false
 
 @checkUsername = (username) ->
   return 4 <= username.length <= 64
@@ -66,6 +66,7 @@
     if @checkto
       clearTimeout @checkto
 
+    # Always wait 1 second to let the user finish typing
     @checkto = setTimeout (->
       $.post '/api/register-available', { username: username }, (data) ->
         validate(data.available isnt false)

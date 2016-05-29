@@ -1,8 +1,12 @@
+Checker = require('./checker.coffee')
+
 module.exports = (server, req, res) ->
   data = req.body
 
   username = data.username
   password = data.password
+
+  return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
   console.log "Registering '#{username}' with '#{password}'"
 
