@@ -1,25 +1,29 @@
 angular.module('epsilonApp').config ($routeProvider) ->
+  templateRoot = "/templates"
+
+  # Shortcut
+  tr = templateRoot
   $routeProvider
     .when '/', {
-      templateUrl: "/templates/index.html"
+      templateUrl: "#{tr}/index"
     }
 
     .when '/login', {
-      templateUrl: "/templates/login.html"
+      templateUrl: "#{tr}/login"
     }
 
     .when '/lost-password', {
-      templateUrl: "/templates/lost-password.html"
+      templateUrl: "#{tr}/lost-password"
     }
 
     .when '/register', {
-      templateUrl: "/templates/register.html"
+      templateUrl: "#{tr}/register"
     }
 
     .when '/about', {
-      templateUrl: "/templates/about.html"
+      templateUrl: "#{tr}/about"
     }
 
     .otherwise {
-      redirectTo: '/'
+      redirectTo: "/"
     }

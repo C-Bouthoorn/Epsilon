@@ -1,7 +1,3 @@
-fs = require('fs')
-moment = require('moment')
-useragent = require('useragent')
-
 Logger = (config) ->
   this.config = config
 
@@ -18,6 +14,7 @@ append = (file, data) ->
   # DEV NOTE: Maybe open file once and append to it later?
   #           I don't know how NodeJS handles this internally
 
+  fs = require('fs')
   fs.appendFile file, "#{data}\n", (err) ->
 
     if err
@@ -25,27 +22,29 @@ append = (file, data) ->
       return ( new Logger({}) ).error err
 
 
+moment = require('moment')
+
 Logger.prototype.accesslogger = (req, res, next) ->
   return unless this.config.access && this.config.access.enabled
 
-
-  # DEV NOTE: We're evalutating everything, even when it's not in the format.
-  #           We should only evaluate and require modules when needed
+  # DEV NOTE: We're evalutating everything, even when it's not needed
+  #           We should only evaluate (and require modules) when needed
 
   ip = req.connection.remoteAddress
+  method = req.method
+  url = req.path
+  time = moment().format this.config.timeformat
+  name = false
 
   if ip in this.config.access.disable
     next()
     return
 
-  time = moment().format this.config.timeformat
 
-  name = false
   if this.config.access.friends && this.config.access.friends[ip]?
     name = this.config.access.friends[ip]
 
-  method = req.method
-  url = req.path
+  useragent = require('useragent')
   ua = useragent.parse( req.get('User-Agent') ).toString()
 
   format = this.config.access.format

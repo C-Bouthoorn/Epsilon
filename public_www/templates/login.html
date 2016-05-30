@@ -10,7 +10,7 @@
       <input
         type="text" class="form-control" id="username" ng-model="epsilonCtrl.login_username"
         required autocapitalize='none' autocorrect='off'
-        onkeyup="validateUsername($(this))" onload="validateUsername($(this))"
+        onkeyup="validateUsername($(this))"
         placeholder="username">
     </div>
 
@@ -25,7 +25,7 @@
       <input
         type="password" class="form-control" id="password" ng-model="epsilonCtrl.login_password"
         required autocapitalize='none' autocorrect='off'
-        onkeyup="validatePassword($(this))" onload="validatePassword($(this))"
+        onkeyup="validatePassword($(this))"
         placeholder="password">
     </div>
 
@@ -38,11 +38,11 @@
   <hr>
 
   <script>
-    // NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
-    //       Remove from production build
-    (function angready() {
+    // DEV NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
+    //           Remove from production build
+    (function vali(){
       if(typeof validateLogin !== 'undefined') setTimeout(validateLogin, 500);
-      else setTimeout(angready, 100);
+      else setTimeout(vali, 100);
     })();
   </script>
 </form>

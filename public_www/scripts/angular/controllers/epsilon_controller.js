@@ -13,28 +13,22 @@ angular.module('epsilonApp').controller('epsilonController', function($location,
       return '';
     }
   };
-  epsilonCtrl.swipeLeft = function() {
+  epsilonCtrl.swipeHandler = function(pos) {
     var currentTab, newTab;
     if (!isMobile.any) {
       return;
     }
     currentTab = tabs.indexOf($location.path());
-    newTab = currentTab + 1;
-    if (newTab >= tabs.length) {
+    newTab = currentTab + pos;
+    if (newTab < 0 || newTab >= tabs.length) {
       return;
     }
     return $location.path(tabs[newTab]);
   };
+  epsilonCtrl.swipeLeft = function() {
+    return swipeHandler(+1);
+  };
   epsilonCtrl.swipeRight = function() {
-    var currentTab, newTab;
-    if (!isMobile.any) {
-      return;
-    }
-    currentTab = tabs.indexOf($location.path());
-    newTab = currentTab - 1;
-    if (newTab < 0) {
-      return;
-    }
-    return $location.path(tabs[newTab]);
+    return swipeHandler(-1);
   };
 });

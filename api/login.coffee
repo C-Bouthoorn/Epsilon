@@ -1,11 +1,10 @@
-Checker = require('./checker.coffee')
-
 module.exports = (server, req, res) ->
   data = req.body
 
   username = data.username
   password = data.password
 
+  Checker = require('./checker.coffee')
   return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
 

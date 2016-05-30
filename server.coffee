@@ -1,25 +1,20 @@
-express = require('express')
-CoffeeScript = require('coffee-script')
-CSON = require('cson')
-path = require('path')
-util = require('util')
-mongoose = require('mongoose')
-bodyParser = require('body-parser')
-https = require('https')
-fs = require('fs')
+require('coffee-script')
 
+express = require('express')
 
 app = express()
 Server = {}
 
 ## Just some functions
 rerequire = (modpath) ->
+  path = require('path')
   delete require.cache[path.resolve modpath]
   return require modpath
 
 
 ## Config stuff
 
+CSON = require('cson')
 Server.config = CSON.parseFile('config.cson')
 
 
@@ -45,7 +40,7 @@ Server.error = (err) ->
 
 
 if Server.config.log && Server.config.log.enabled
-  Logger = require('./logger.coffee')
+  Logger = require('./logger')
   Server.logger = new Logger(Server.config.log)
 
   app.use (err, req, res, next) ->
@@ -60,6 +55,8 @@ if Server.config.log && Server.config.log.enabled
 
 Server.mdb = false
 if Server.config.database && Server.config.database.enabled
+  mongoose = require('mongoose')
+
   mongoose.connect Server.config.database.url
   Server.mdb = mongoose.connection
 
@@ -84,6 +81,7 @@ if Server.config.database && Server.config.database.enabled
 
 ## Server stuff
 
+bodyParser = require('body-parser')
 app.use bodyParser.json()
 app.use bodyParser.urlencoded({
   extended: true
@@ -95,9 +93,12 @@ app.use '/', express.static "#{Server.config.wwwroot}/", {
 
 # Set up HTTPS server
 if Server.config.https && Server.config.https.enabled
+  https = require('https')
+  fs = require('fs')
+
   httpsserver = https.createServer {
-    key: fs.readFileSync(Server.config.https.pem.key, 'utf8')
-    cert: fs.readFileSync(Server.config.https.pem.cert, 'utf8')
+    key: fs.readFileSync  Server.config.https.pem.key,  'utf8'
+    cert: fs.readFileSync Server.config.https.pem.cert, 'utf8'
     passphrase: Server.config.https.pem.passphrase
   }, app
 
@@ -109,8 +110,8 @@ app.all '/api/:func?', (req, res) ->
 
   switch req.params.func
 
-    # NOTE: Using rerequire() because this is a development build
-    #       don't forget to remove in production
+    # DEV NOTE: Using rerequire() because this is a development build
+    #           remove from production
 
     when 'test'
       api = rerequire('./api/test')

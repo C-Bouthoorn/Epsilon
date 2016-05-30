@@ -1,1 +1,1 @@
-angular.module 'epsilonApp', ['ngRoute', 'ngTouch']
+angular.module 'epsilonApp', [ 'ngRoute', 'ngTouch' ]

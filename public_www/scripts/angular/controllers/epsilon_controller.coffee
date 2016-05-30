@@ -1,8 +1,9 @@
-angular.module('epsilonApp')
+angular.module 'epsilonApp'
 
   .controller 'epsilonController', ($location, $scope) ->
     epsilonCtrl = this
 
+    # DEV NOTE: This should be made dynamic somewhere
     tabs = [ "/", "/login", "/register", "/about" ]
 
     epsilonCtrl.isActiveTab = (tab) ->
@@ -14,32 +15,25 @@ angular.module('epsilonApp')
       else
         return ''
 
+
+    epsilonCtrl.swipeHandler = (pos) ->
+      # Disable on desktop
+      return unless isMobile.any
+
+      currentTab = tabs.indexOf $location.path()
+      newTab = currentTab + pos
+
+      if newTab < 0 || newTab >= tabs.length
+        return
+
+      $location.path tabs[newTab]
+
+    # Swipe left = Go to tab right
     epsilonCtrl.swipeLeft = ->
-      # Disable on desktop
-      return unless isMobile.any
+      swipeHandler(+1)
 
-      currentTab = tabs.indexOf($location.path())
-      newTab = currentTab + 1
-
-      if newTab >= tabs.length
-        return
-
-      $location.path tabs[newTab]
-
-      # Remove focus from other tab
-
-
+    # Swipe right = Go to tab left
     epsilonCtrl.swipeRight = ->
-      # Disable on desktop
-      return unless isMobile.any
-
-      currentTab = tabs.indexOf($location.path())
-      newTab = currentTab - 1
-
-      if newTab < 0
-        return
-
-      $location.path tabs[newTab]
-
+      swipeHandler(-1)
 
     return
