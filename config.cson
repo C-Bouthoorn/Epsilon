@@ -1,4 +1,11 @@
+###
+  Everything is required unless stated otherwise
+  However, every value can be `false` to be disabled
+###
+
+
 # Server settings
+
 http:
   enabled: true
   port: 8000
@@ -11,7 +18,6 @@ https:
     key: './keys/key.pem'
     cert: './keys/cert.pem'
     passphrase: 'Charlie'
-
 
 wwwroot: "./public_www"
 
@@ -29,24 +35,36 @@ log:
   timeformat: "DD-MM-YYYY HH:mm:ss.SSS"
 
   access:
+    enabled: true
+
     file: "log/access.log"
     stdout: false
+    stderr: false
 
+    # IP's not to include in the logs (For example your own IP in development)
     disable: [
       "::ffff:84.107.251.46"
     ]
 
+    # Optionally show a name behind the IP for common visitors
     friends: {
-      "::ffff:213.93.28.7": "Gabriëlle"
-      "::ffff:80.60.110.83": "Marten"
-      "::ffff:85.150.254.59": "Jorrit"
+      "::ffff:213.93.28.7":   "(Gabriëlle)"
+      "::ffff:80.60.110.83":  "(Marten)"
+      "::ffff:85.150.254.59": "(Jorrit)"
     }
 
-    format: "[:time:] :ip: (:name:) - :useragent: || :method: ':url:'"
+    format: "[:time:] :ip-: :name?: - :useragent: || :method: ':url:'"
 
   error:
+    enabled: true
+
     file: "log/error.log"
+    stdout: false
+    stderr: true
 
   server:
+    enabled: true
+
     file: "log/server.log"
     stdout: true
+    stderr: false
