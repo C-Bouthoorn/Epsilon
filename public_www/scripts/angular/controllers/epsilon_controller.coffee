@@ -30,10 +30,10 @@ angular.module 'epsilonApp'
 
     # Swipe left = Go to tab right
     epsilonCtrl.swipeLeft = ->
-      swipeHandler(+1)
+      epsilonCtrl.swipeHandler(+1)
 
     # Swipe right = Go to tab left
     epsilonCtrl.swipeRight = ->
-      swipeHandler(-1)
+      epsilonCtrl.swipeHandler(-1)
 
     return

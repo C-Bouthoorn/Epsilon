@@ -2,7 +2,7 @@
 <form action="#" onsubmit="register(this, event)" ng-model="epsilonCtrl.register_form">
   <input type="hidden" id="formtype" value="register">
 
-  <div class="form-group has-error has-feedback">
+  <div class="form-group has-warning has-feedback">
     <!-- <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label> -->
 
     <div class="input-group">
@@ -15,10 +15,10 @@
         placeholder="username">
     </div>
 
-    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
+    <span class="form-control-feedback fa fa-fw fa-cog" aria-hidden="true"></span>
   </div>
 
-  <div class="form-group has-error has-feedback">
+  <div class="form-group has-warning has-feedback">
     <!-- <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label> -->
 
     <div class="input-group">
@@ -31,10 +31,10 @@
         placeholder="password">
     </div>
 
-    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
+    <span class="form-control-feedback fa fa-fw fa-cog" aria-hidden="true"></span>
   </div>
 
-  <div class="form-group has-error has-feedback">
+  <div class="form-group has-warning has-feedback">
     <!-- <label for="password-again" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password again</label> -->
 
     <div class="input-group">
@@ -46,17 +46,19 @@
         placeholder="password again">
     </div>
 
-    <span class="form-control-feedback fa fa-fw fa-ban" aria-hidden="true"></span>
+    <span class="form-control-feedback fa fa-fw fa-cog" aria-hidden="true"></span>
   </div>
 
   <input type="submit" class="btn btn-primary" value="Register">
 
+  <hr>
+
   <script>
-  // NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
-  //       Remove from production build
-  (function angready() {
-    if(typeof validateRegister !== 'undefined') setTimeout(validateRegister, 500);
-    else setTimeout(angready, 100);
-  })();
+    // DEV NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
+    //           Remove from production build
+    (function vali(){
+      if(typeof validateRegister !== 'undefined') setTimeout(validateRegister, 100);
+      else setTimeout(vali, 50);
+    })();
   </script>
 </form>

@@ -26,9 +26,9 @@ angular.module('epsilonApp').controller('epsilonController', function($location,
     return $location.path(tabs[newTab]);
   };
   epsilonCtrl.swipeLeft = function() {
-    return swipeHandler(+1);
+    return epsilonCtrl.swipeHandler(+1);
   };
   epsilonCtrl.swipeRight = function() {
-    return swipeHandler(-1);
+    return epsilonCtrl.swipeHandler(-1);
   };
 });
