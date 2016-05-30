@@ -88,7 +88,7 @@ app.use bodyParser.urlencoded({
 })
 
 app.use '/', express.static "#{Server.config.wwwroot}/", {
-  extensions: [ '.html' ]
+  extensions: [ 'html' ]
 }
 
 # Set up HTTPS server
