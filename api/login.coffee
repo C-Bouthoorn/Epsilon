@@ -4,28 +4,32 @@ module.exports = (server, req, res) ->
   username = data.username
   password = data.password
 
-  Checker = require('./checker.coffee')
+  Checker = require './checker.coffee'
   return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
-
-  console.log "Logging in '#{username}' with '#{password}'"
-
   unless server.mdb
-    return res.json {
-      error: "Database not ready"
+    # Database not ready or loaded
+    server.error "[LDBERR] Login request but database not ready!"
+
+    res.json {
+      err: 'LOGIN:INTERNAL_ERROR'
     }
 
+    return
 
-  hashsalt = require('password-hash-and-salt')
+
+  hashsalt = require 'password-hash-and-salt'
 
   server.models.User.findOne { username: username }, (err, user) ->
     if err
       return server.error err
 
     unless user
-      return res.json {
-        error: "User not found"
+      res.json {
+        err: 'LOGIN:INVALID_CRED'
       }
+
+      return
 
     db_password = user.password
 

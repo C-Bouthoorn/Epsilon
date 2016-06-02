@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html
-  ng-app="epsilonApp"
-  ng-controller="epsilonController as epsilonCtrl"
-  ng-swipe-left="epsilonCtrl.swipeLeft()" ng-swipe-right="epsilonCtrl.swipeRight()">
+  data-ng-app="epsilonApp"
+  data-ng-controller="epsilonController as epsilonCtrl"
+  data-ng-swipe-left="epsilonCtrl.swipeLeft()" data-ng-swipe-right="epsilonCtrl.swipeRight()">
 
   <head>
     <title>Epsilon - Homepage</title>
@@ -55,20 +55,19 @@
     <script type="text/coffeescript" src="/scripts/login.coffee"></script>
     <script type="text/coffeescript" src="/scripts/register.coffee"></script>
   </head>
-  <body>
+  <body class="container">
     <h1 class="text-center"><a href="#/" style="color: inherit;">EPSILON</a></h1>
 
-    <section class="container">
-      <nav>
-        <ul class="nav nav-tabs" role="tablist">
-          <li class="{{epsilonCtrl.tabClass('/')}}"><a href="#/">home</a></li>
-          <li class="{{epsilonCtrl.tabClass('/login')}}"><a href="#/login">login</a></li>
-          <li class="{{epsilonCtrl.tabClass('/register')}}"><a href="#/register">register</a></li>
-          <li class="{{epsilonCtrl.tabClass('/about')}}"><a href="#/about">about</a></li>
-        </ul>
-      </nav>
+    <nav>
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="{{epsilonCtrl.tabClass('/')}}"><a href="#/">home</a></li>
+        <li class="{{epsilonCtrl.tabClass('/login')}}"><a href="#/login">login</a></li>
+        <li class="{{epsilonCtrl.tabClass('/register')}}"><a href="#/register">register</a></li>
+        <li class="{{epsilonCtrl.tabClass('/about')}}"><a href="#/about">about</a></li>
+      </ul>
+    </nav>
 
-      <ng-view></ng-view>
-    </section>
+    <!-- ng-view -->
+    <div data-ng-view></div>
   </body>
 </html>

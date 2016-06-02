@@ -1,7 +1,7 @@
 Logger = (config) ->
   this.config = config
 
-  # Set timeformat if false
+  # Set required defaults
   unless this.config.timeformat
     # Default is ISO 8601
     this.config.timeformat = "YYYY-MM-DD[T]HH:MM:SSZ"
@@ -14,7 +14,7 @@ append = (file, data) ->
   # DEV NOTE: Maybe open file once and append to it later?
   #           I don't know how NodeJS handles this internally
 
-  fs = require('fs')
+  fs = require 'fs'
   fs.appendFile file, "#{data}\n", (err) ->
 
     if err
@@ -22,7 +22,10 @@ append = (file, data) ->
       return ( new Logger({}) ).error err
 
 
-moment = require('moment')
+Logger.prototype.gettime = ->
+  moment = require 'moment'
+  moment().format this.config.timeformat
+
 
 Logger.prototype.accesslogger = (req, res, next) ->
   return unless this.config.access && this.config.access.enabled
@@ -33,7 +36,7 @@ Logger.prototype.accesslogger = (req, res, next) ->
   ip = req.connection.remoteAddress
   method = req.method
   url = req.path
-  time = moment().format this.config.timeformat
+  time = this.gettime()
   name = false
 
   if ip in this.config.access.disable
@@ -77,7 +80,7 @@ Logger.prototype.errorlogger = (err, req, res, next) ->
     return next(err)
 
   res.status(500).json {
-    error: "Unknown error. We're sorry"
+    err: 'UNKNOWN:UNKNOWN'
   }
 
   return unless this.config.error && this.config.error.enabled
@@ -95,10 +98,9 @@ Logger.prototype.errorlogger = (err, req, res, next) ->
 Logger.prototype.log = (msg) ->
   return unless this.config.server && this.config.server.enabled
 
-  time = moment().format this.config.timeformat
+  time = gettime()
 
   if this.config.server.file
-    time = moment().format this.config.timeformat
     append this.config.server.file, "[#{time}] #{msg}"
 
   if this.config.server.stdout
@@ -110,8 +112,9 @@ Logger.prototype.log = (msg) ->
 Logger.prototype.error = (err) ->
   return unless this.config.error && this.config.error.enabled
 
+  time = gettime()
+
   if this.config.error.file
-    time = moment().format this.config.timeformat
     append this.config.error.file, "[#{time}] #{err}"
 
   if this.config.error.stdout

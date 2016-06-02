@@ -4,32 +4,35 @@ module.exports = (server, req, res) ->
   username = data.username
   password = data.password
 
-  Checker = require('./checker')
+  Checker = require './checker'
   return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
-  console.log "Registering '#{username}' with '#{password}'"
-
   unless server.mdb
-    return res.json {
+    server.error "[RDBERR] Register request but database not ready!"
+
+    res.json {
       error: "Database not ready"
     }
 
+    return
 
-  hashsalt = require('password-hash-and-salt')
+
+  hashsalt = require 'password-hash-and-salt'
 
   hashsalt(password).hash (err, hashpassword) ->
     if err
-      return server.error err
+      server.error err
+      return
 
-
-    user = new server.models.User {
+    newuser = new server.models.User {
       username: username
       password: hashpassword
     }
 
-    user.save (err) ->
+    newuser.save (err) ->
       if err
-        return server.error err
+        server.error err
+        return
 
       res.json {
         done: true

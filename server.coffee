@@ -1,48 +1,63 @@
-require('coffee-script')
+# For all coffeescript files we're going to import
+require 'coffee-script'
 
-express = require('express')
-
+# The ExpressJS base
+express = require 'express'
 app = express()
+
+# The Server object we'll put all important stuff in to send to the API
+# and to keep everything in place
 Server = {}
 
-## Just some functions
+
+## Helping functions
+
+# rerequire a module -- remove from cache and re-require from file
+# Comes in handy in development builds when custom modules are often changing
 rerequire = (modpath) ->
-  path = require('path')
+  path = require 'path'
+
+  # Remove from cache
   delete require.cache[path.resolve modpath]
+
+  # Reload file
   return require modpath
 
 
-## Config stuff
+## Load configuration
 
-CSON = require('cson')
-Server.config = CSON.parseFile('config.cson')
+CSON = require 'cson'
+Server.config = CSON.parseFile 'config.cson'
 
 
-## Logging stuff
+## Logger functions
+
 Server.logger = false
 
+# Log a normal message
 Server.log = (msg) ->
   if Server.logger
     # Use logger if enabled
     Server.logger.log msg
   else
-    # Use console if we don't have a logger
+    # fallback: Use console if we don't have a logger
     console.log msg
 
-
+# Log an error
 Server.error = (err) ->
   if Server.logger
     # Use logger if enabled
     Server.logger.error err
   else
-    # Use console if we don't have a logger
+    # fallback: Use console if we don't have a logger
     console.error err
 
-
+# Prepare logger
 if Server.config.log && Server.config.log.enabled
-  Logger = require('./logger')
+  Logger = require './logger'
   Server.logger = new Logger(Server.config.log)
 
+  # Redirect server logs to logger
   app.use (err, req, res, next) ->
     Server.logger.errorlogger(err, req, res, next)
 
@@ -51,84 +66,97 @@ if Server.config.log && Server.config.log.enabled
 
   Server.log "Log enabled"
 
-## Database stuff
 
-Server.mdb = false
+## Database functions
+
+Server.database = false
+
+# Prepare database
 if Server.config.database && Server.config.database.enabled
-  mongoose = require('mongoose')
+  mongoose = require 'mongoose'
 
+  # Connect
   mongoose.connect Server.config.database.url
-  Server.mdb = mongoose.connection
+  Server.database.conn = mongoose.connection
 
-  Server.mdb.on 'error', ->
+  # Add log listeners
+  Server.database.on 'error', ->
+    # TODO: Specify error
     Server.error "Database error"
 
-  Server.mdb.once 'open', ->
+  Server.database.once 'open', ->
     Server.log "Database connected"
 
-  # Create schemas and models
-  Server.schemas = {
+  # Schemas
+  Server.database.schemas = {
     User: mongoose.Schema {
       username: String
       password: String
     }
   }
 
-  Server.models = {
+  # Models
+  Server.database.models = {
     User: mongoose.model 'User', Server.schemas.User
   }
 
 
-## Server stuff
+## Load middlewares
 
-bodyParser = require('body-parser')
+# Load POST message parser
+bodyParser = require 'body-parser'
 app.use bodyParser.json()
-app.use bodyParser.urlencoded({
-  extended: true
-})
+app.use bodyParser.urlencoded { extended: true }
 
+
+## Prepare API calls
+
+app.all '/api/:func?', (req, res) ->
+  # DEV NOTE: Change to dynamic loading / config
+  validApis = [ 'test', 'login', 'register', 'register-available' ]
+
+  # Check if API call is valid
+  func = req.params.func
+  if func in validApis
+    # DEV NOTE: Using rerequire() because this is a development build
+    #           remove from production
+    api = rerequire('./api/' + func)
+  else
+    # Send error when invalid
+    api = rerequire('./api/error')
+
+  # Call API
+  api(Server, req, res)
+
+
+## Prepare servers
+
+# Load root folder statically
 app.use '/', express.static "#{Server.config.wwwroot}/", {
-  extensions: [ 'html' ]
+  extensions: [ 'html', 'css', 'coffee', 'js' ]
 }
 
-# Set up HTTPS server
+# Prepare HTTPS server
 if Server.config.https && Server.config.https.enabled
-  https = require('https')
-  fs = require('fs')
+  fs    = require 'fs'
+  https = require 'https'
 
   httpsserver = https.createServer {
-    key: fs.readFileSync  Server.config.https.pem.key,  'utf8'
+    key:  fs.readFileSync Server.config.https.pem.key,  'utf8'
     cert: fs.readFileSync Server.config.https.pem.cert, 'utf8'
     passphrase: Server.config.https.pem.passphrase
   }, app
 
-## API stuff
-
-app.all '/api/:func?', (req, res) ->
-
-  api = require('./api/index')
-
-  switch req.params.func
-
-    # DEV NOTE: Using rerequire() because this is a development build
-    #           remove from production
-
-    when 'test'
-      api = rerequire('./api/test')
-    when 'login'
-      api = rerequire('./api/login')
-    when 'register'
-      api = rerequire('./api/register')
-    when 'register-available'
-      api = rerequire('./api/register-available')
-
-  api(Server, req, res)
 
 
+## Start servers
+
+# Start HTTP server
 if Server.config.http && Server.config.http.enabled
   app.listen (Server.config.http.port || 80), ->
     Server.log "HTTP server is now listening on port #{Server.config.http.port}"
 
+# Start HTTPS server
 if Server.config.https && Server.config.https.enabled
   httpsserver.listen (Server.config.https.port || 443), ->
     Server.log "HTTPS server is now listening on port #{Server.config.https.port}"
