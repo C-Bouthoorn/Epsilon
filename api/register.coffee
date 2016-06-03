@@ -7,11 +7,11 @@ module.exports = (server, req, res) ->
   Checker = require './checker'
   return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
-  unless server.mdb
+  unless server.database
     server.error "[RDBERR] Register request but database not ready!"
 
     res.json {
-      error: "Database not ready"
+      err: "REGISTER:INTERNAL_ERROR"
     }
 
     return
@@ -24,7 +24,7 @@ module.exports = (server, req, res) ->
       server.error err
       return
 
-    newuser = new server.models.User {
+    newuser = new server.database.models.User {
       username: username
       password: hashpassword
     }

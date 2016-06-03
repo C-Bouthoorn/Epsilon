@@ -7,7 +7,7 @@ module.exports = (server, req, res) ->
   Checker = require './checker.coffee'
   return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
-  unless server.mdb
+  unless server.database
     # Database not ready or loaded
     server.error "[LDBERR] Login request but database not ready!"
 
@@ -20,9 +20,10 @@ module.exports = (server, req, res) ->
 
   hashsalt = require 'password-hash-and-salt'
 
-  server.models.User.findOne { username: username }, (err, user) ->
+  server.database.models.User.findOne { username: username }, (err, user) ->
     if err
-      return server.error err
+      server.error err
+      return
 
     unless user
       res.json {
@@ -35,7 +36,8 @@ module.exports = (server, req, res) ->
 
     hashsalt(password).verifyAgainst db_password, (err, ok) ->
       if err
-        return server.error err
+        server.error err
+        return
 
       res.json {
         login: ok
