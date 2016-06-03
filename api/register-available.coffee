@@ -1,11 +1,14 @@
 module.exports = (server, req, res) ->
   data = req.body
 
+  # Get data
   username = data.username
 
+  # Check data
   Checker = require './checker'
   return unless Checker.checkUsername(username)
 
+  # Check database
   unless server.database
     server.error "[RADBERR] Register request but database not ready!"
 
@@ -21,6 +24,7 @@ module.exports = (server, req, res) ->
       server.error err
       return
 
+    # Send if username is still available
     res.json {
       available: n == 0
     }

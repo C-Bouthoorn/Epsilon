@@ -11,20 +11,22 @@ Logger = (config) ->
 
 # Append string to file
 append = (file, data) ->
+  fs = require 'fs'
+
   # DEV NOTE: Maybe open file once and append to it later?
   #           I don't know how NodeJS handles this internally
 
-  fs = require 'fs'
   fs.appendFile file, "#{data}\n", (err) ->
 
     if err
-      # DEV NOTE: ehm?
-      return ( new Logger({}) ).error err
+      # DEV NOTE: ehm? yeah...
+      return (new Logger({})).error err
 
 
 Logger.prototype.gettime = ->
   moment = require 'moment'
-  moment().format this.config.timeformat
+
+  return moment().format this.config.timeformat
 
 
 Logger.prototype.accesslogger = (req, res, next) ->
@@ -39,15 +41,16 @@ Logger.prototype.accesslogger = (req, res, next) ->
   time = this.gettime()
   name = false
 
+  # Skip disabled IPs
   if ip in this.config.access.disable
     next()
     return
 
-
+  # Get name of friend
   if this.config.access.friends && this.config.access.friends[ip]?
     name = this.config.access.friends[ip]
 
-  useragent = require('useragent')
+  useragent = require 'useragent'
   ua = useragent.parse( req.get('User-Agent') ).toString()
 
   format = this.config.access.format
@@ -77,7 +80,8 @@ Logger.prototype.accesslogger = (req, res, next) ->
 
 Logger.prototype.errorlogger = (err, req, res, next) ->
   if res.headersSent
-    return next(err)
+    next(err)
+    return
 
   res.status(500).json {
     err: 'UNKNOWN:UNKNOWN'
@@ -98,7 +102,7 @@ Logger.prototype.errorlogger = (err, req, res, next) ->
 Logger.prototype.log = (msg) ->
   return unless this.config.server && this.config.server.enabled
 
-  time = gettime()
+  time = this.gettime()
 
   if this.config.server.file
     append this.config.server.file, "[#{time}] #{msg}"
@@ -112,7 +116,7 @@ Logger.prototype.log = (msg) ->
 Logger.prototype.error = (err) ->
   return unless this.config.error && this.config.error.enabled
 
-  time = gettime()
+  time = this.gettime()
 
   if this.config.error.file
     append this.config.error.file, "[#{time}] #{err}"

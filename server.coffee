@@ -75,16 +75,18 @@ Server.database = false
 if Server.config.database && Server.config.database.enabled
   mongoose = require 'mongoose'
 
+  Server.database = {}
+
   # Connect
   mongoose.connect Server.config.database.url
   Server.database.conn = mongoose.connection
 
   # Add log listeners
-  Server.database.on 'error', ->
+  Server.database.conn.on 'error', ->
     # TODO: Specify error
     Server.error "Database error"
 
-  Server.database.once 'open', ->
+  Server.database.conn.once 'open', ->
     Server.log "Database connected"
 
   # Schemas
@@ -97,7 +99,7 @@ if Server.config.database && Server.config.database.enabled
 
   # Models
   Server.database.models = {
-    User: mongoose.model 'User', Server.schemas.User
+    User: mongoose.model 'User', Server.database.schemas.User
   }
 
 

@@ -3,6 +3,8 @@ angular.module('epsilonApp').config ($routeProvider) ->
 
   # Shortcut
   tr = templateRoot
+
+  # Set routes
   $routeProvider
     .when '/', {
       templateUrl: "#{tr}/index"

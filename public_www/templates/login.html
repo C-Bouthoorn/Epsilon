@@ -3,8 +3,6 @@
   <input type="hidden" id="formtype" value="login">
 
   <div class="form-group has-warning has-feedback">
-    <!-- <label for="username" class="control-label"><i class="fa fa-user" aria-hidden="true"></i> Username</label> -->
-
     <div class="input-group">
       <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
       <input
@@ -18,8 +16,6 @@
   </div>
 
   <div class="form-group has-warning has-feedback">
-    <!-- <label for="password" class="control-label"><i class="fa fa-key" aria-hidden="true"></i> Password</label> -->
-
     <div class="input-group">
       <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
       <input
@@ -39,8 +35,8 @@
 
   <script>
     // DEV NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
-    //           Remove from production build
-    (function vali(){
+    //           Remove from production build!
+    (function vali() {
       if(typeof validateLogin !== 'undefined') setTimeout(validateLogin, 100);
       else setTimeout(vali, 50);
     })();

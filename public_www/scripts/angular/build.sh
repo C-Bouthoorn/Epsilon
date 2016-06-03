@@ -1,18 +1,23 @@
 #!/bin/bash
 
+# Colour codes
 red="\e[1;31m"
 green="\e[1;32m"
 blue="\e[1;34m"
 none="\e[0m"
 
+# Project root
 root="$(pwd)"
 
+# Make sure shasums folder exist
 mkdir -p "$root/shasums"
 
+# Print color
 color() {
 	echo -ne "$1";
 }
 
+# Check error code
 check() {
 	ec=$1
 
@@ -27,10 +32,12 @@ check() {
 	color $none
 }
 
+# Format time
 mytime() {
 	echo -n "$(date +"%H:%M:%S")"
 }
 
+# Check if shasum has changed
 haschanged() {
 	prefix=$1
 	file=$2
@@ -52,6 +59,7 @@ haschanged() {
 	fi
 }
 
+# Build file
 build() {
 	prefix=$1
 
@@ -59,6 +67,7 @@ build() {
 	for f in *.coffee; do
 		# Check if file exists and is readable
 		if [ -f $f ]; then
+			# Check for changes
 			haschanged "$prefix" "$f"
 			if [ $? = 0 ]; then
 				echo -n "[$(mytime)] Building $f"
@@ -69,7 +78,7 @@ build() {
 	done
 }
 
-
+# Check arguments
 force=false
 if [ "$1" = "force" ] || [ "$2" = "force" ]; then
 	force=true

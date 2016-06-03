@@ -15,29 +15,29 @@ https:
   port: 8001
 
   pem:
-    key: './keys/key.pem'
+    key:  './keys/key.pem'
     cert: './keys/cert.pem'
     passphrase: 'Charlie'
 
-wwwroot: "./public_www"
+wwwroot: './public_www'
 
 # Database settings
 database:
   enabled: true
 
-  url: "mongodb://localhost/test"
+  url: 'mongodb://localhost/test'
 
 
 # Logging settings
 log:
   enabled: true
 
-  timeformat: "DD-MM-YYYY HH:mm:ss.SSS"
+  timeformat: 'DD-MM-YYYY HH:mm:ss.SSS'
 
   access:
     enabled: true
 
-    file: "log/access.log"
+    file: 'log/access.log'
     stdout: false
     stderr: false
 
@@ -48,23 +48,23 @@ log:
 
     # Optionally show a name behind the IP for common visitors
     friends: {
-      "::ffff:213.93.28.7":   "(Gabriëlle)"
-      "::ffff:80.60.110.83":  "(Marten)"
-      "::ffff:85.150.254.59": "(Jorrit)"
+      '::ffff:213.93.28.7':   "(Gabriëlle)"
+      '::ffff:80.60.110.83':  "(Marten)"
+      '::ffff:85.150.254.59': "(Jorrit)"
     }
 
-    format: "[:time:] :ip-: :name?: - :useragent: || :method: ':url:'"
+    format: '[:time:] :ip-: :name?: - :useragent: || :method: \':url:\''
 
   error:
     enabled: true
 
-    file: "log/error.log"
+    file: 'log/error.log'
     stdout: false
     stderr: true
 
   server:
     enabled: true
 
-    file: "log/server.log"
+    file: 'log/server.log'
     stdout: true
     stderr: false

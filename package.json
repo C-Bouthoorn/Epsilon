@@ -4,6 +4,7 @@
   "description": "none",
   "main": "server.coffee",
   "scripts": {
+    "build": "public_www/scripts/angular/build.sh server &",
     "server": "coffee server.coffee"
   },
   "author": "Charlie Bouthoorn",
