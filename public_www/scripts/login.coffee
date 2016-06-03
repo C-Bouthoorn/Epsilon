@@ -23,8 +23,7 @@
   $.post "/api/login", logindata, (data) ->
     console.log data
 
-    # Dirty handle
     if data.login
-      alert "You succesfully logged in!"
+      location.href = '#/panel'
     else
       alert "You failed to log in!"

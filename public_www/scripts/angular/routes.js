@@ -13,6 +13,10 @@ angular.module('epsilonApp').config(function($routeProvider) {
     templateUrl: tr + "/register"
   }).when('/about', {
     templateUrl: tr + "/about"
+  }).when('/panel/', {
+    templateUrl: tr + "/panel/index",
+    controller: 'epsilonPanelController',
+    controllerAs: 'panelCtrl'
   }).otherwise({
     redirectTo: "/"
   });

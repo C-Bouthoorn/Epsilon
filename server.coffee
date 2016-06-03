@@ -113,12 +113,30 @@ app.use bodyParser.urlencoded { extended: true }
 
 ## Prepare API calls
 
+# DEV NOTE: Change to dynamic loading
+app.all '/api/panel/:func?', (req, res) ->
+
+  func = req.params.func
+
+  if func == 'get'
+    # DEV NOTE: BEWARE OF INJECTION
+    api = rerequire('./api/panel/' + req.body.get)
+
+    api(Server, req, res)
+
+  else
+    res.status(500).json {
+      err: 'SESSION:INVALID_REQUEST'
+    }
+
+
 app.all '/api/:func?', (req, res) ->
-  # DEV NOTE: Change to dynamic loading / config
+  # DEV NOTE: Change to dynamic loading
   validApis = [ 'test', 'login', 'register', 'register-available' ]
 
   # Check if API call is valid
   func = req.params.func
+
   if func in validApis
     # DEV NOTE: Using rerequire() because this is a development build
     #           remove from production
@@ -129,7 +147,6 @@ app.all '/api/:func?', (req, res) ->
 
   # Call API
   api(Server, req, res)
-
 
 ## Prepare servers
 

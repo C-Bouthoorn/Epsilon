@@ -26,6 +26,13 @@ angular.module('epsilonApp').config ($routeProvider) ->
       templateUrl: "#{tr}/about"
     }
 
+
+    .when '/panel/', {
+      templateUrl: "#{tr}/panel/index"
+      controller: 'epsilonPanelController'
+      controllerAs: 'panelCtrl'
+    }
+
     .otherwise {
       redirectTo: "/"
     }
