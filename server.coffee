@@ -110,6 +110,29 @@ bodyParser = require 'body-parser'
 app.use bodyParser.json()
 app.use bodyParser.urlencoded { extended: true }
 
+# Load session
+session = require 'express-session'
+mongostore = require('connect-mongo')(session)
+
+# Use existing connection for database
+if Server.database
+  store = new mongostore({
+    mongooseConnection: Server.database.conn
+  })
+else
+  store = new mongostore()
+
+app.use session {
+  name: 'SESSION_ID'
+  resave: false
+  saveUninitialized: true
+  secret: 'Epsilon'
+  store: store
+
+  cookie: {
+    secure: 'auto'
+  }
+}
 
 ## Prepare API calls
 

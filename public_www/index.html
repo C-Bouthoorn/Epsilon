@@ -43,6 +43,9 @@
     <!-- isMobile -->
     <script src="https://cdn.rawgit.com/kaimallea/isMobile/dc3bc3e60c5b365cc8a2a64d00118910806b6e31/isMobile.min.js" integrity="sha384-PxxEjxngVfSig320D2/ah5QNwLnxIUjUja6CMp6GNArkZ0BHxNLgxchl9eZQo+ur" crossorigin="anonymous"></script>
 
+    <!-- Cookies -->
+    <script src="https://cdn.rawgit.com/js-cookie/js-cookie/d430a7351127fc3ea0e231103a2badbeedda0e55/src/js.cookie.js" integrity="sha384-7TKmS1hiP54DECF7IWVVox+fyyUM6Rx+kFGAbjk7obmr0jwJubqG5A41kfIeVizf" crossorigin="anonymous"></script>
+
     <!-- Custom AngularJS -->
     <script type="text/javascript" src="/scripts/angular/app.js"></script>
     <script type="text/javascript" src="/scripts/angular/routes.js"></script>
@@ -57,23 +60,38 @@
 
     <!-- Custom code -->
     <script type="text/coffeescript" src="/scripts/checks.coffee"></script>
+    <script type="text/coffeescript" src="/scripts/footer.coffee"></script>
     <script type="text/coffeescript" src="/scripts/login.coffee"></script>
     <script type="text/coffeescript" src="/scripts/register.coffee"></script>
   </head>
 
-  <body class="container">
-    <h1 class="text-center"><a href="#/" style="color: inherit;">EPSILON</a></h1>
+  <body>
+    <div class="container">
+      <h1 class="text-center"><a href="#/" style="color: inherit;">EPSILON</a></h1>
 
-    <nav>
-      <ul class="nav nav-tabs" role="tablist">
-        <li class="{{epsilonCtrl.tabClass('/')}}"><a href="#/">home</a></li>
-        <li class="{{epsilonCtrl.tabClass('/login')}}"><a href="#/login">login</a></li>
-        <li class="{{epsilonCtrl.tabClass('/register')}}"><a href="#/register">register</a></li>
-        <li class="{{epsilonCtrl.tabClass('/about')}}"><a href="#/about">about</a></li>
-      </ul>
-    </nav>
+      <nav>
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="{{epsilonCtrl.tabClass('/')}}"><a href="#/">home</a></li>
+          <li class="{{epsilonCtrl.tabClass('/login')}}"><a href="#/login">login</a></li>
+          <li class="{{epsilonCtrl.tabClass('/register')}}"><a href="#/register">register</a></li>
+          <li class="{{epsilonCtrl.tabClass('/about')}}"><a href="#/about">about</a></li>
+        </ul>
+      </nav>
 
-    <!-- ng-view -->
-    <div data-ng-view></div>
+      <!-- ng-view -->
+      <div data-ng-view></div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        This page uses <a target="_blank" href="https://simple.wikipedia.org/wiki/HTTP_cookie">cookies</a>.
+        If you don't want them, don't use this site.
+        
+        <button type="button" class="close" onclick="hideFooter()">
+          <i class="fa fa-close" aria-hidden="true"></i>
+          <span class="sr-only">(Hide)</span>
+        </button>
+      </div>
+    </footer>
   </body>
 </html>
