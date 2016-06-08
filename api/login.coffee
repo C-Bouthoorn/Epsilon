@@ -6,7 +6,7 @@ module.exports = (server, req, res) ->
   password = data.password
 
   # Check data
-  Checker = require './checker.coffee'
+  Checker = require './checker'
   return unless Checker.checkUsername(username) && Checker.checkPassword(password)
 
   # Check database
