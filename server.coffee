@@ -154,13 +154,18 @@ app.all '/api/panel/:func?', (req, res) ->
 
 
 app.all '/api/:func?', (req, res) ->
-  # Check if API call is valid
   func = req.params.func
+
+  # Check if path is valid
+  unless /^[a-zA-Z0-9\-]+$/.test(func)
+    # Invalid call!
+    return
 
   fs = require 'fs'
 
   # Check if file exists
-  fs.access "./api/#{func}", fs.F_OK & fs.R_OK, (err) ->
+  # DEV NOTE: Might be easy to DoS. Load all files once!
+  fs.access "./api/#{func}.coffee", fs.F_OK & fs.R_OK, (err) ->
     # DEV NOTE: Using rerequire() because this is a development build
     #           Remove from production
 
@@ -168,7 +173,6 @@ app.all '/api/:func?', (req, res) ->
       # Send error when invalid
       api = rerequire('./api/error')
     else
-      # DEV NOTE: BEWARE OF INJECTION (?)
       api = rerequire('./api/' + func)
 
     # Call API
