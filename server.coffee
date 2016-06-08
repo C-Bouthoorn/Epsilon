@@ -142,34 +142,37 @@ app.all '/api/panel/:func?', (req, res) ->
   func = req.params.func
 
   if func == 'get'
-    # DEV NOTE: BEWARE OF INJECTION
+    # DEV NOTE: BEWARE OF INJECTION (?)
     api = rerequire('./api/panel/' + req.body.get)
 
     api(Server, req, res)
 
   else
     res.status(500).json {
-      err: 'SESSION:INVALID_REQUEST'
+      err: 'PANEL:INVALID_REQUEST'
     }
 
 
 app.all '/api/:func?', (req, res) ->
-  # DEV NOTE: Change to dynamic loading
-  validApis = [ 'test', 'login', 'register', 'register-available' ]
-
   # Check if API call is valid
   func = req.params.func
 
-  if func in validApis
-    # DEV NOTE: Using rerequire() because this is a development build
-    #           remove from production
-    api = rerequire('./api/' + func)
-  else
-    # Send error when invalid
-    api = rerequire('./api/error')
+  fs = require 'fs'
 
-  # Call API
-  api(Server, req, res)
+  # Check if file exists
+  fs.access "./api/#{func}", fs.F_OK & fs.R_OK, (err) ->
+    # DEV NOTE: Using rerequire() because this is a development build
+    #           Remove from production
+
+    if err
+      # Send error when invalid
+      api = rerequire('./api/error')
+    else
+      # DEV NOTE: BEWARE OF INJECTION (?)
+      api = rerequire('./api/' + func)
+
+    # Call API
+    api(Server, req, res)
 
 ## Prepare servers
 
