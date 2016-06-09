@@ -180,6 +180,9 @@ app.all '/api/:func?', (req, res) ->
 
 ## Prepare servers
 
+# Test if server is running
+app.get '/OK', (req, res) -> res.send "OK"
+
 # Load root folder statically
 app.use '/', express.static "#{Server.config.wwwroot}/", {
   extensions: [ 'html', 'css', 'coffee', 'js' ]
