@@ -13,6 +13,14 @@ hr {
   text-align: center;
 }
 
+
+/*-- ReView --*/
+
+.reView {
+  display: none;
+}
+
+
 /*-- Sticky footer --*/
 
 html {

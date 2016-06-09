@@ -22,7 +22,14 @@ angular.module 'epsilonApp'
       # Disable on desktop
       return unless isMobile.any
 
+      # Get current tab
       currentTab = tabs.indexOf $location.path()
+
+      if currentTab == -1
+        # Current tab not in navigation -> Cancel swipe
+        return
+
+      # Get new tab
       newTab = currentTab + pos
 
       # Check boundaries
@@ -32,12 +39,11 @@ angular.module 'epsilonApp'
       # Set new path
       $location.path tabs[newTab]
 
+
     # Swipe left = Go to tab right
-    epsilonCtrl.swipeLeft = ->
-      epsilonCtrl.swipeHandler(+1)
+    epsilonCtrl.swipeLeft  = -> epsilonCtrl.swipeHandler(+1)
 
     # Swipe right = Go to tab left
-    epsilonCtrl.swipeRight = ->
-      epsilonCtrl.swipeHandler(-1)
+    epsilonCtrl.swipeRight = -> epsilonCtrl.swipeHandler(-1)
 
     return

@@ -19,8 +19,11 @@ angular.module('epsilonApp').controller('epsilonController', function($location,
       return;
     }
     currentTab = tabs.indexOf($location.path());
+    if (currentTab === -1) {
+      return;
+    }
     newTab = currentTab + pos;
-    if (!((0 < newTab && newTab < tabs.length))) {
+    if (!((0 <= newTab && newTab < tabs.length))) {
       return;
     }
     return $location.path(tabs[newTab]);
