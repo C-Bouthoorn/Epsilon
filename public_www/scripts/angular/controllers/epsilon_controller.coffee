@@ -26,7 +26,7 @@ angular.module 'epsilonApp'
       newTab = currentTab + pos
 
       # Check boundaries
-      unless 0 < newTab < tabs.length
+      unless 0 <= newTab < tabs.length
         return
 
       # Set new path
