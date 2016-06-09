@@ -3,7 +3,7 @@
     hideFooter()
 
 @hideFooter = () ->
-  $('footer .cookies').hide()
+  $('footer').hide()
   Cookies.set 'hidefooter', 'true', { expires: 356 }
 
 
