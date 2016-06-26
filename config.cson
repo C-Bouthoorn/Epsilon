@@ -21,6 +21,15 @@ https:
 
 wwwroot: './public_www'
 
+# Drop back to this user after starting the server
+dropbackuser:
+  # Setting this to false means that the server will stay running
+  # as the same user you started it with, which could be a security issue
+  enabled: true
+
+  uid: 'charlie'
+  gid: 'charlie'
+
 # Database settings
 database:
   enabled: true

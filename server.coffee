@@ -116,9 +116,9 @@ mongostore = require('connect-mongo')(session)
 
 # Use existing connection for database
 if Server.database
-  store = new mongostore({
+  store = new mongostore {
     mongooseConnection: Server.database.conn
-  })
+  }
 else
   store = new mongostore()
 
@@ -142,7 +142,7 @@ app.all '/api/panel/:func?', (req, res) ->
   func = req.params.func
 
   if func == 'get'
-    # DEV NOTE: BEWARE OF INJECTION (?)
+    # DEV NOTE: Might be easy to DoS. Load dir structure once (in production)!
     api = rerequire('./api/panel/' + req.body.get)
 
     api(Server, req, res)
@@ -164,7 +164,7 @@ app.all '/api/:func?', (req, res) ->
   fs = require 'fs'
 
   # Check if file exists
-  # DEV NOTE: Might be easy to DoS. Load all files once!
+  # DEV NOTE: Might be easy to DoS. Load dir structure once (in production)!
   fs.access "./api/#{func}.coffee", fs.F_OK & fs.R_OK, (err) ->
     # DEV NOTE: Using rerequire() because this is a development build
     #           Remove from production
@@ -212,3 +212,19 @@ if Server.config.http && Server.config.http.enabled
 if Server.config.https && Server.config.https.enabled
   httpsserver.listen (Server.config.https.port || 443), ->
     Server.log "HTTPS server is now listening on port #{Server.config.https.port}"
+
+# Drop back user
+if Server.config.dropbackuser && Server.config.dropbackuser.enabled
+  oldgid = process.getgid()
+  olduid = process.getuid()
+
+  try
+    process.setgid Server.config.dropbackuser.gid
+    process.setuid Server.config.dropbackuser.uid
+
+    Server.log "Dropped back permissions from '#{olduid}:#{oldgid}' to '#{uid}:#{gid}'"
+  catch err
+    Server.error "Failed to drop back permissions! Running as '#{olduid}:#{oldgid}'"
+    Server.error err
+else
+  Server.log "Didn't drop back permissions; running as '#{olduid}:#{oldgid}'"
