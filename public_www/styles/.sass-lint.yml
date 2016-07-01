@@ -1,0 +1,6 @@
+rules:
+  no-ids: 0
+  nesting-depth: 0
+  no-qualifying-elements: 0
+  single-line-per-selector: 0
+  property-sort-order: 0

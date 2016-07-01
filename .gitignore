@@ -1,4 +1,13 @@
 node_modules
 log
-public_www/scripts/angular/shasums
-backupcode
+
+.sass-cache
+
+**/*.map
+**/*.js
+**/*.min.js
+**/*.css
+**/*.min.css
+**/*.min.html
+
+!public_www/scripts/libs/*.js

@@ -1,0 +1,12 @@
+linters:
+  IdSelector:
+    enabled: false
+
+  NestingDepth:
+    enabled: false
+
+  SingleLinePerSelector:
+    enabled: false
+
+  PropertySortOrder:
+    enabled: false

@@ -1,6 +1,6 @@
 angular.module 'epsilonApp'
 
-  .controller 'epsilonPanelController', ($location, $scope) ->
+  .controller 'epsilonPanelController', ['$location', '$scope', ($location, $scope) ->
     panelCtrl = this
 
     panelCtrl.session = {
@@ -15,3 +15,4 @@ angular.module 'epsilonApp'
       $scope.$apply()
 
     return
+  ]

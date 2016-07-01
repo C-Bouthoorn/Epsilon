@@ -1,0 +1,50 @@
+$font-family: 'Open Sans', sans-serif;
+$header-color: #626;
+$hr-background-color: #ccc;
+$footer-background-color: #f5f5f5;
+$footer-height: 60px;
+
+
+html {
+  // Footer related
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  font-family: $font-family;
+
+  // Make space for footer
+  margin-bottom: $footer-height;
+}
+
+// Headers
+h1, h2, h3, h4, h5, h6 {
+  color: $header-color;
+}
+
+// Horizontal rule
+hr {
+  background-color: $hr-background-color;
+  text-align: center;
+
+  height: 1px;
+  width: 95%;
+}
+
+
+// ReView
+.reView {
+  display: none;
+}
+
+// Footer
+.footer {
+  background-color: $footer-background-color;
+
+  position: absolute;
+  bottom: 0;
+
+  height: $footer-height;
+  width: 100%;
+}

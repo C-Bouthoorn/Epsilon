@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Removing map files"
+find . -name "*.map" -type f | grep -v "node_modules\|libs" | xargs -r rm
+
+echo "Removing min files"
+find . -type f -name "*.min.js" -o -name "*.min.css" -o -name "*.min.html" | grep -v "node_modules\|libs" | xargs -r rm
+
+echo "Removing JS files"
+find . -name "*.js"  -type f | grep -v "node_modules\|libs" | xargs -r rm
+
+echo "Removing CSS files"
+find . -name "*.css" -type f | grep -v "node_modules\|libs" | xargs -r rm

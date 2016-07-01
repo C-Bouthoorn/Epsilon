@@ -1,10 +1,22 @@
 # Epsilon
 
-## Necessary stuff
+A simple Node, Express, MongoDB server.
 
-Always keep `build.sh server &` running in `public_www/scripts/angular/`
-to make sure the scripts get refreshed when you update them
+## Warning
 
-## How to run
+The provided certificates are self-signed. This means that you will most likely
+get an error if you try to use the HTTPS server. When running in production,
+replace these certificates with your own, or disable the HTTPS server in the
+config file.
 
-`coffee server.coffee`
+## Building
+
+Building is done with `grunt`, which you can get from [gruntjs.com](http://gruntjs.com/)
+
+## Running
+
+Running done using `npm start`.
+
+## License
+
+This project uses the MIT license. See the LICENSE file for more information.

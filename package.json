@@ -1,11 +1,12 @@
 {
   "name": "epsilon",
-  "version": "1.0.0",
-  "description": "none",
-  "main": "server.coffee",
+  "version": "1.2.0",
+  "description": "A simple NodeJS server",
+  "main": "server.js",
   "scripts": {
-    "build": "public_www/scripts/angular/build.sh server &",
-    "start": "coffee server.coffee"
+    "build": "grunt",
+    "start": "node server.js",
+    "clean": ""
   },
   "author": "Charlie Bouthoorn",
   "license": "MIT",
@@ -24,5 +25,14 @@
     "mongoose": "^4.4.19",
     "password-hash-and-salt": "^0.1.3",
     "useragent": "^2.1.9"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-coffee": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-htmlmin": "^1.4.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1"
   }
 }

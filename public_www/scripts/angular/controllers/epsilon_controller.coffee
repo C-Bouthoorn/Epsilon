@@ -1,6 +1,6 @@
 angular.module 'epsilonApp'
 
-  .controller 'epsilonController', ($location, $scope) ->
+  .controller 'epsilonController', ['$location', '$scope', ($location, $scope) ->
     epsilonCtrl = this
 
     # DEV NOTE: This should be made dynamic somewhere
@@ -47,3 +47,4 @@ angular.module 'epsilonApp'
     epsilonCtrl.swipeRight = -> epsilonCtrl.swipeHandler(-1)
 
     return
+  ]

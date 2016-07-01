@@ -1,8 +1,6 @@
-angular.module('epsilonApp').config ($routeProvider) ->
-  templateRoot = "/templates"
-
-  # Shortcut
-  tr = templateRoot
+angular.module('epsilonApp').config ['$routeProvider', ($routeProvider) ->
+  # Template Root
+  tr = "/templates"
 
   # Set routes
   $routeProvider
@@ -36,3 +34,6 @@ angular.module('epsilonApp').config ($routeProvider) ->
     .otherwise {
       redirectTo: "/"
     }
+
+  return
+]

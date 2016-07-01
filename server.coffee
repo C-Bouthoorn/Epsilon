@@ -1,6 +1,3 @@
-# For all coffeescript files we're going to import
-require 'coffee-script'
-
 # The ExpressJS base
 express = require 'express'
 app = express()
@@ -185,7 +182,7 @@ app.get '/OK', (req, res) -> res.send "OK"
 
 # Load root folder statically
 app.use '/', express.static "#{Server.config.wwwroot}/", {
-  extensions: [ 'html', 'css', 'coffee', 'js' ]
+  extensions: [ 'min.html', 'min.css', 'min.js', 'html', 'css', 'js' ]
 }
 
 # Prepare HTTPS server
@@ -219,8 +216,11 @@ if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   olduid = process.getuid()
 
   try
-    process.setgid Server.config.dropbackuser.gid
-    process.setuid Server.config.dropbackuser.uid
+    gid = Server.config.dropbackuser.gid
+    uid = Server.config.dropbackuser.uid
+
+    process.setgid gid
+    process.setuid uid
 
     Server.log "Dropped back permissions from '#{olduid}:#{oldgid}' to '#{uid}:#{gid}'"
   catch err
