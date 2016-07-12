@@ -15,7 +15,7 @@ Building is done with `grunt`, which you can get from [gruntjs.com](http://grunt
 
 ## Running
 
-Running done using `npm start`.
+Running is done using `npm start`.
 
 ## License
 
