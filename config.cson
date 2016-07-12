@@ -7,7 +7,7 @@
 # Server settings
 
 # Set to true to enable development mode
-dev: false
+dev: true
 
 # The HTTP server
 http:

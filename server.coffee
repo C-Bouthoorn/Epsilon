@@ -21,13 +21,6 @@ rerequire = (modpath) ->
   return require modpath
 
 
-# Use rerequire if running on development build
-reqfunc = require
-if Server.config.dev
-  # rerequire reloads the API file every time it's used
-  reqfunc = rerequire
-
-
 ## Load configuration
 
 CSON = require 'cson'
@@ -70,6 +63,15 @@ if Server.config.log && Server.config.log.enabled
     Server.logger.accesslogger(req, res, next)
 
   Server.log "Log enabled"
+
+
+## Helper functions
+
+# Use rerequire if running on development build, require otherwise
+# rerequire reloads the API file every time it's used
+reqfunc = require
+if Server.config.dev
+  reqfunc = rerequire
 
 
 ## Database functions
