@@ -10,6 +10,8 @@ module.exports = (grunt) ->
         options:
           bare: true
           sourceMap: true
+
+          # TODO: Don't place root maps in public folder
           sourceMapDir: 'public_www/sourceMaps'
 
         files: [
