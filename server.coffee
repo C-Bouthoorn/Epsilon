@@ -215,16 +215,25 @@ if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   oldgid = process.getgid()
   olduid = process.getuid()
 
+  # Get readable names from ID's
+  userid = require('userid')
+  oldname = userid.username(olduid)
+  oldgroup = userid.groupname(oldgid)
+
   try
     gid = Server.config.dropbackuser.gid
     uid = Server.config.dropbackuser.uid
 
+    if gid == oldgid && uid == olduid
+      # Nothing to drop back
+      Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
+
     process.setgid gid
     process.setuid uid
 
-    Server.log "Dropped back permissions from '#{olduid}:#{oldgid}' to '#{uid}:#{gid}'"
+    Server.log "Dropped back permissions from '#{oldname}:#{oldgroup}' to '#{uid}:#{gid}'"
   catch err
-    Server.error "Failed to drop back permissions! Running as '#{olduid}:#{oldgid}'"
+    Server.error "Failed to drop back permissions! Running as '#{oldname}:#{oldgroup}'"
     Server.error err
 else
-  Server.log "Didn't drop back permissions; running as '#{olduid}:#{oldgid}'"
+  Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
