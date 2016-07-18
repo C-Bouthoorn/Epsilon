@@ -242,21 +242,19 @@ if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   oldname = userid.username(olduid)
   oldgroup = userid.groupname(oldgid)
 
-  try
-    gid = Server.config.dropbackuser.gid
-    uid = Server.config.dropbackuser.uid
+  gid = Server.config.dropbackuser.gid
+  uid = Server.config.dropbackuser.uid
 
-    if gid == oldgid && uid == olduid
-      # Nothing to drop back
-      Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
-
+  if gid == oldgid && uid == olduid
+    # Nothing to drop back
+    Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
+    
+  else
     process.setgid gid
     process.setuid uid
 
     Server.log "Dropped back permissions from '#{oldname}:#{oldgroup}' to '#{uid}:#{gid}'"
-  catch err
-    Server.error "Failed to drop back permissions! Running as '#{oldname}:#{oldgroup}'"
-    Server.error err
+
 else
   Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
 

@@ -3,20 +3,20 @@
 ### This script removes all files created by grunt
 ### Run this if you want to refresh the build
 
-# Exceptions
-exc="node_modules\|libs"
+# TODO: Fix this
+alias findexc='find . -not \( -path ./node_modules -prune -o -path ./public_www/scripts/libs -prune -o -path ./.git -prune \) -print0 '
 
 echo "Removing map files"
-find . -name "*.map" -type f | grep -v "$exc" | xargs -r rm
+findexc -name "*.map" | xargs -rt --null -- echo
 
 echo "Removing min files"
-find . -type f -name "*.min.js" -o -name "*.min.css" -o -name "*.min.html" | grep -v "$exc" | xargs -r rm
+findexc \( -name "*.min.js" -o -name "*.min.css" -o -name "*.min.html" \) | xargs -rt --null -- echo
 
 echo "Removing JS files"
-find . -name "*.js"  -type f | grep -v "$exc" | xargs -r rm
+findexc -name "*.js" | xargs -rt --null -- echo
 
 echo "Removing CSS files"
-find . -name "*.css" -type f | grep -v "$exc" | xargs -r rm
+findexc -name "*.css" | xargs -rt --null -- echo
 
 echo "Removing .sass-cache"
-find . -name ".sass-cache" -type d | grep -v "$exc" | xargs -r -- rm -r
+findexc -name ".sass-cache" | xargs -rt --null -- echo # rm -r
