@@ -1,5 +1,5 @@
 <h2></h2>
-<form action="#" onsubmit="register(this, event)" ng-model="epsilonCtrl.register_form">
+<form action="#" onsubmit="register(this, event)">
   <input type="hidden" id="formtype" value="register">
 
   <div class="form-group has-warning has-feedback">
@@ -7,8 +7,8 @@
       <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
 
       <input
-        type="text" class="form-control" id="username" ng-model="epsilonCtrl.register_username"
-        required autocapitalize='off' autocorrect='off'
+        type="text" class="form-control" id="username" data-ng-model="epsilonCtrl.register_username"
+        required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         onkeyup="validateUsername($(this), true)"
         placeholder="username">
     </div>
@@ -21,8 +21,8 @@
       <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
 
       <input
-        type="password" class="form-control" id="password" ng-model="epsilonCtrl.register_password"
-        required autocapitalize='off' autocorrect='off'
+        type="password" class="form-control" id="password" data-ng-model="epsilonCtrl.register_password"
+        required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         onkeyup="validatePassword($(this), true)"
         placeholder="password">
     </div>
@@ -34,8 +34,8 @@
     <div class="input-group">
       <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
       <input
-        type="password" class="form-control" id="password-again" ng-model="epsilonCtrl.register_password_again"
-        required autocapitalize='off' autocorrect='off'
+        type="password" class="form-control" id="password-again" data-ng-model="epsilonCtrl.register_password_again"
+        require dautocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         onkeyup="validatePasswordAgain($(this))"
         placeholder="password again">
     </div>
@@ -47,12 +47,8 @@
 
   <hr>
 
-  <script>
-    // DEV NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
-    //           Remove from production build!
-    (function vali() {
-      if(typeof validateRegister !== 'undefined') setTimeout(validateRegister, 100);
-      else setTimeout(vali, 50);
-    })();
+  <script type="text/javascript">
+    // Validate empty form
+    validateRegister();
   </script>
 </form>

@@ -6,8 +6,8 @@
     <div class="input-group">
       <span class="input-group-addon"><i class="fa fa-user fa-fw" aria-hidden="true"></i></span>
       <input
-        type="text" class="form-control" id="username" ng-model="epsilonCtrl.login_username"
-        required autocapitalize='none' autocorrect='off'
+        type="text" class="form-control" id="username" data-ng-model="epsilonCtrl.login_username"
+        required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         onkeyup="validateUsername($(this))"
         placeholder="username">
     </div>
@@ -19,8 +19,8 @@
     <div class="input-group">
       <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
       <input
-        type="password" class="form-control" id="password" ng-model="epsilonCtrl.login_password"
-        required autocapitalize='none' autocorrect='off'
+        type="password" class="form-control" id="password" data-ng-model="epsilonCtrl.login_password"
+        required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
         onkeyup="validatePassword($(this))"
         placeholder="password">
     </div>
@@ -33,12 +33,8 @@
 
   <hr>
 
-  <script>
-    // DEV NOTE: This timeout is because CoffeeScript needs to do stuff while the document is already loaded!
-    //           Remove from production build!
-    (function vali() {
-      if(typeof validateLogin !== 'undefined') setTimeout(validateLogin, 100);
-      else setTimeout(vali, 50);
-    })();
+  <script type="text/javascript">
+    // Validate empty form
+    validateLogin();
   </script>
 </form>

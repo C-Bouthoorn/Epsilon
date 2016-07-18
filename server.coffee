@@ -3,7 +3,7 @@ express = require 'express'
 app = express()
 
 # The Server object we'll put all important stuff in to send to the API
-# and to keep everything in place
+# and to keep everything organised
 Server = {}
 
 
@@ -51,6 +51,7 @@ Server.error = (err) ->
 
 # Prepare logger
 if Server.config.log && Server.config.log.enabled
+  # Load logger with config
   Logger = require './logger'
   Server.logger = new Logger(Server.config.log)
 
@@ -62,6 +63,15 @@ if Server.config.log && Server.config.log.enabled
     Server.logger.accesslogger(req, res, next)
 
   Server.log "Log enabled"
+
+
+## Helper functions
+
+# Use rerequire if running on development build, require otherwise
+# rerequire reloads the API file every time it's used
+reqfunc = require
+if Server.config.dev
+  reqfunc = rerequire
 
 
 ## Database functions
@@ -79,9 +89,9 @@ if Server.config.database && Server.config.database.enabled
   Server.database.conn = mongoose.connection
 
   # Add log listeners
-  Server.database.conn.on 'error', ->
-    # TODO: Specify error
+  Server.database.conn.on 'error', (err) ->
     Server.error "Database error"
+    Server.error err
 
   Server.database.conn.once 'open', ->
     Server.log "Database connected"
@@ -111,19 +121,21 @@ app.use bodyParser.urlencoded { extended: true }
 session = require 'express-session'
 mongostore = require('connect-mongo')(session)
 
-# Use existing connection for database
+
 if Server.database
+  # Use existing connection for database
   store = new mongostore {
     mongooseConnection: Server.database.conn
   }
 else
+  # Create new connection for database
   store = new mongostore()
 
 app.use session {
   name: 'SESSION_ID'
   resave: false
   saveUninitialized: true
-  secret: 'Epsilon'
+  secret: 'Epsilon'  # TODO: Stronger secret
   store: store
 
   cookie: {
@@ -133,14 +145,14 @@ app.use session {
 
 ## Prepare API calls
 
-# DEV NOTE: Change to dynamic loading
 app.all '/api/panel/:func?', (req, res) ->
 
   func = req.params.func
 
+  # TODO: Make more static
   if func == 'get'
-    # DEV NOTE: Might be easy to DoS. Load dir structure once (in production)!
-    api = rerequire('./api/panel/' + req.body.get)
+    # TODO: Might be easy to DoS. Load dir structure once in production!
+    api = reqfunc('./api/panel/' + req.body.get)
 
     api(Server, req, res)
 
@@ -161,28 +173,35 @@ app.all '/api/:func?', (req, res) ->
   fs = require 'fs'
 
   # Check if file exists
-  # DEV NOTE: Might be easy to DoS. Load dir structure once (in production)!
+  # TODO: Might be easy to DoS. Load dir structure once in production!
   fs.access "./api/#{func}.coffee", fs.F_OK & fs.R_OK, (err) ->
-    # DEV NOTE: Using rerequire() because this is a development build
-    #           Remove from production
 
     if err
       # Send error when invalid
-      api = rerequire('./api/error')
+      api = reqfunc('./api/error')
     else
-      api = rerequire('./api/' + func)
+      api = reqfunc('./api/' + func)
 
     # Call API
     api(Server, req, res)
 
 ## Prepare servers
 
-# Test if server is running
+# External test if server is running
 app.get '/OK', (req, res) -> res.send "OK"
+
+
+# Get default extensions
+if Server.config.dev
+  # Dev build shouldn't use minified versions
+  extensions = [ 'html', 'css', 'js' ]
+else
+  # Keep normal extensions as backup
+  extensions = [ 'min.html', 'min.css', 'min.js', 'html', 'css', 'js' ]
 
 # Load root folder statically
 app.use '/', express.static "#{Server.config.wwwroot}/", {
-  extensions: [ 'min.html', 'min.css', 'min.js', 'html', 'css', 'js' ]
+  extensions: extensions
 }
 
 # Prepare HTTPS server
@@ -191,8 +210,9 @@ if Server.config.https && Server.config.https.enabled
   https = require 'https'
 
   httpsserver = https.createServer {
-    key:  fs.readFileSync Server.config.https.pem.key,  'utf8'
-    cert: fs.readFileSync Server.config.https.pem.cert, 'utf8'
+    key:  fs.readFileSync Server.config.https.pem.key,   'utf8'
+    cert: fs.readFileSync Server.config.https.pem.cert,  'utf8'
+    ca:   ( if Server.config.https.pem.chain then fs.readFileSync(Server.config.https.pem.chain, 'utf8') else undefined )
     passphrase: Server.config.https.pem.passphrase
   }, app
 
@@ -210,8 +230,14 @@ if Server.config.https && Server.config.https.enabled
   httpsserver.listen (Server.config.https.port || 443), ->
     Server.log "HTTPS server is now listening on port #{Server.config.https.port}"
 
+
+## Final tasks
+
 # Drop back user
 if Server.config.dropbackuser && Server.config.dropbackuser.enabled
+  gid = Server.config.dropbackuser.gid
+  uid = Server.config.dropbackuser.uid
+  
   oldgid = process.getgid()
   olduid = process.getuid()
 
@@ -220,20 +246,22 @@ if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   oldname = userid.username(olduid)
   oldgroup = userid.groupname(oldgid)
 
-  try
-    gid = Server.config.dropbackuser.gid
-    uid = Server.config.dropbackuser.uid
+  if ( gid == oldgid || gid == oldgroup ) && ( uid == olduid || uid == oldname )
+    # Nothing to drop back
+    Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
 
-    if gid == oldgid && uid == olduid
-      # Nothing to drop back
-      Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
-
+  else
     process.setgid gid
     process.setuid uid
 
     Server.log "Dropped back permissions from '#{oldname}:#{oldgroup}' to '#{uid}:#{gid}'"
-  catch err
-    Server.error "Failed to drop back permissions! Running as '#{oldname}:#{oldgroup}'"
-    Server.error err
+
 else
   Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
+
+
+# Preload API when no development build
+unless Server.config.dev
+  # TODO: Dynamic
+  for api in [ 'checker', 'error', 'login', 'register-available', 'register', 'test' ]
+    require('./api/' + api)

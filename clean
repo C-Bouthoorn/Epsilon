@@ -1,13 +1,27 @@
-#!/bin/bash
+#!/bin/sh
+
+### This script removes all files created by grunt
+### Run this if you want to refresh the build
+
+# Exceptions and other options
+opts='-not ( -path ./node_modules -prune -o -path ./public_www/scripts/libs -prune -o -path ./.git -prune )'
+
+# Yes I know about the -delete option of find, but it complains about -depth which I don't like
+del='-exec rm {}'
+delr='-exec rm -r {}'
+
 
 echo "Removing map files"
-find . -name "*.map" -type f | grep -v "node_modules\|libs" | xargs -r rm
+find . $opts -name '*.map' $del \;
 
 echo "Removing min files"
-find . -type f -name "*.min.js" -o -name "*.min.css" -o -name "*.min.html" | grep -v "node_modules\|libs" | xargs -r rm
+find . $opts \( -name '*.min.js' -o -name '*.min.css' -o -name '*.min.html' \) $del \;
 
 echo "Removing JS files"
-find . -name "*.js"  -type f | grep -v "node_modules\|libs" | xargs -r rm
+find . $opts -name '*.js' $del \;
 
 echo "Removing CSS files"
-find . -name "*.css" -type f | grep -v "node_modules\|libs" | xargs -r rm
+find . $opts -name '*.css' $del \;
+
+echo "Removing .sass-cache"
+find . $opts -name '.sass-cache' $delr \;

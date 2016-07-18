@@ -1,24 +1,32 @@
 ###
   Everything is required unless stated otherwise
-  However, every value can be `false` to be disabled
+  However, setting the enabled value to false will disable that function
 ###
 
 
 # Server settings
 
+# Set to true to enable development mode
+dev: true
+
+# The HTTP server
 http:
   enabled: true
   port: 8000
 
+# The HTTPS server
 https:
   enabled: true
   port: 8001
 
+  # Certificate credentials
   pem:
     key:  './keys/key.pem'
     cert: './keys/cert.pem'
+    chain: false
     passphrase: 'Charlie'
 
+# Root of the webserver
 wwwroot: './public_www'
 
 # Drop back to this user after starting the server
@@ -43,6 +51,7 @@ log:
 
   timeformat: 'DD-MM-YYYY HH:mm:ss.SSS'
 
+  # Accesslog
   access:
     enabled: true
 
@@ -50,7 +59,7 @@ log:
     stdout: false
     stderr: false
 
-    # IP's not to include in the logs (For example your own IP in development)
+    # IP's not to include in the logs (For example your own IP)
     disable: [
       "::ffff:84.107.251.46"
     ]
@@ -64,6 +73,7 @@ log:
 
     format: '[:time:] :ip-: :name?: - :useragent: || :method: \':url:\''
 
+  # Errorlog
   error:
     enabled: true
 
@@ -71,6 +81,7 @@ log:
     stdout: false
     stderr: true
 
+  # Serverlog
   server:
     enabled: true
 
