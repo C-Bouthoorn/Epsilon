@@ -23,6 +23,7 @@ https:
   pem:
     key:  './keys/key.pem'
     cert: './keys/cert.pem'
+    chain: false
     passphrase: 'Charlie'
 
 # Root of the webserver

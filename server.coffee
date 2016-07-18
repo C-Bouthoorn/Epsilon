@@ -210,8 +210,9 @@ if Server.config.https && Server.config.https.enabled
   https = require 'https'
 
   httpsserver = https.createServer {
-    key:  fs.readFileSync Server.config.https.pem.key,  'utf8'
-    cert: fs.readFileSync Server.config.https.pem.cert, 'utf8'
+    key:  fs.readFileSync Server.config.https.pem.key,   'utf8'
+    cert: fs.readFileSync Server.config.https.pem.cert,  'utf8'
+    ca:   ( if Server.config.https.pem.chain then fs.readFileSync(Server.config.https.pem.chain, 'utf8') else undefined )
     passphrase: Server.config.https.pem.passphrase
   }, app
 
@@ -234,6 +235,9 @@ if Server.config.https && Server.config.https.enabled
 
 # Drop back user
 if Server.config.dropbackuser && Server.config.dropbackuser.enabled
+  gid = Server.config.dropbackuser.gid
+  uid = Server.config.dropbackuser.uid
+  
   oldgid = process.getgid()
   olduid = process.getuid()
 
@@ -242,13 +246,10 @@ if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   oldname = userid.username(olduid)
   oldgroup = userid.groupname(oldgid)
 
-  gid = Server.config.dropbackuser.gid
-  uid = Server.config.dropbackuser.uid
-
-  if gid == oldgid && uid == olduid
+  if ( gid == oldgid || gid == oldgroup ) && ( uid == olduid || uid == oldname )
     # Nothing to drop back
     Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
-    
+
   else
     process.setgid gid
     process.setuid uid
