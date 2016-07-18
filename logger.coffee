@@ -13,14 +13,11 @@ Logger = (config) ->
 append = (file, data) ->
   fs = require 'fs'
 
-  # DEV NOTE: Maybe open file once and append to it later?
-  #           I don't know how NodeJS handles this internally
-
   fs.appendFile file, "#{data}\n", (err) ->
 
     if err
-      # DEV NOTE: ehm? yeah...
-      return (new Logger({})).error err
+      # Can't use Logger here as that might (and will) result in recursing errors
+      console.error err
 
 
 Logger.prototype.gettime = ->
@@ -51,19 +48,20 @@ Logger.prototype.accesslogger = (req, res, next) ->
     name = this.config.access.friends[ip]
 
   useragent = require 'useragent'
-  ua = useragent.parse( req.get('User-Agent') ).toString()
+  ua = req.get('User-Agent')
+  pua = useragent.parse(ua).toString()  # Parsed UserAgent
 
   format = this.config.access.format
 
   data = format
     .replace /:time:/gi, time
     .replace /:ip:/gi, ip
-    .replace /:ip-:/gi, ip.replace(/^::ffff:/, '')
+    .replace /:ip4:/gi, ip.replace(/^::ffff:/, '')  # Remove IPv4 prefix
     .replace /:name:/gi, if name then name else "unknown"
-    .replace /:name\?:/gi, if name then name else ""
+    .replace /:name\?:/gi, if name then name else ""  # Don't show "unknown" when name isn't known
     .replace /:method:/gi, method
     .replace /:url:/gi, url
-    .replace /:useragent:/gi, ua
+    .replace /:puseragent:/gi, pua
 
 
   if this.config.access.file
@@ -79,14 +77,6 @@ Logger.prototype.accesslogger = (req, res, next) ->
 
 
 Logger.prototype.errorlogger = (err, req, res, next) ->
-  if res.headersSent
-    next(err)
-    return
-
-  res.status(500).json {
-    err: 'UNKNOWN:UNKNOWN'
-  }
-
   return unless this.config.error && this.config.error.enabled
 
   if this.config.error.file
@@ -96,6 +86,14 @@ Logger.prototype.errorlogger = (err, req, res, next) ->
     console.log err
   if this.config.error.stderr
     console.error err
+
+  if res.headersSent
+    next(err)
+    return
+
+  res.status(500).json {
+    err: 'UNKNOWN:UNKNOWN'
+  }
 
 
 

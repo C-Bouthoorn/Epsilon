@@ -64,14 +64,14 @@ log:
       "::ffff:84.107.251.46"
     ]
 
-    # Optionally show a name behind the IP for common visitors
+    # Optionally show a name for common visitors
     friends: {
-      '::ffff:213.93.28.7':   "(Gabriëlle)"
-      '::ffff:80.60.110.83':  "(Marten)"
-      '::ffff:85.150.254.59': "(Jorrit)"
+      '::ffff:127.0.0.1': "BFF"
     }
 
-    format: '[:time:] :ip-: :name?: - :useragent: || :method: \':url:\''
+
+    # TODO: Add possibility for function
+    format: '[:time:] :ip4: (:name?:) - :useragent: || :method: \':url:\' \n\t :puseragent:'
 
   # Errorlog
   error:

@@ -6,6 +6,11 @@ app = express()
 # and to keep everything organised
 Server = {}
 
+## Load configuration
+
+CSON = require 'cson'
+Server.config = CSON.parseFile 'config.cson'
+
 
 ## Helping functions
 
@@ -20,11 +25,23 @@ rerequire = (modpath) ->
   # Reload file
   return require modpath
 
+## Prefer .min version above normal version if in production
+# Is this even safe? Hope so
+unless Server.config.dev
+  reqbak = require.extensions['.js']
+  require.extensions['.js'] = (mod, filename) ->
+    try
+      fs = require 'fs'
 
-## Load configuration
+      # Check if .min.js version exists
+      newpath = filename.replace /\.js$/, '.min.js'
+      fs.accessSync newpath, fs.F_OK
 
-CSON = require 'cson'
-Server.config = CSON.parseFile 'config.cson'
+      # Minified version exists, so require that one
+      return reqbak(mod, newpath)
+    catch
+      # Minified version doesn't exist, so require normal version
+      return reqbak(mod, filename)
 
 
 ## Logger functions
@@ -149,11 +166,14 @@ app.all '/api/panel/:func?', (req, res) ->
 
   func = req.params.func
 
-  # TODO: Make more static
   if func == 'get'
-    # TODO: Might be easy to DoS. Load dir structure once in production!
-    api = reqfunc('./api/panel/' + req.body.get)
+    file = req.body.get
 
+    # Make sure the path can't escape the ./api/panel folder
+    path = require 'path'
+    safepath = path.normalize(file).replace(/^(\.\.[\/\\])+/, '')
+
+    api = reqfunc('./api/panel/' + safepath)
     api(Server, req, res)
 
   else
@@ -237,7 +257,7 @@ if Server.config.https && Server.config.https.enabled
 if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   gid = Server.config.dropbackuser.gid
   uid = Server.config.dropbackuser.uid
-  
+
   oldgid = process.getgid()
   olduid = process.getuid()
 
@@ -260,8 +280,8 @@ else
   Server.log "Didn't drop back permissions; running as '#{oldname}:#{oldgroup}'"
 
 
-# Preload API when no development build
+# Preload API files when no development build
 unless Server.config.dev
   # TODO: Dynamic
-  for api in [ 'checker', 'error', 'login', 'register-available', 'register', 'test' ]
+  for api in [ 'checker', 'error', 'login', 'register-available', 'register', 'test', 'panel/session' ]
     require('./api/' + api)
