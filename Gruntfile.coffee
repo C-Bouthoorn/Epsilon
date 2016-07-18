@@ -1,23 +1,41 @@
 module.exports = (grunt) ->
 
+  # Get wwwroot from config
+  CSON    = require 'cson'
+  config  = CSON.parseFile 'config.cson'
+  wwwroot = config.wwwroot
+
+
   grunt.initConfig {
-    pkg: grunt.file.readJSON 'package.json'
-
-
     # Compile CoffeeScript
     coffee:
-      compile:
+      compile_server:
         options:
           bare: true
           sourceMap: true
 
-          # TODO: Don't place root maps in public folder
-          sourceMapDir: 'public_www/sourceMaps'
+          sourceMapDir: './sourceMaps'
 
         files: [
           expand: true
           cwd: ''
-          src: [ '!node_modules/**', '**/*.coffee', '!Gruntfile.coffee', '!node_modules/**' ]
+          src: [ '!node_modules/**', './*.coffee', '!./Gruntfile.coffee', '!node_modules/**' ]
+          dest: ''
+          ext: '.js'
+          extDot: 'last'
+        ]
+
+      compile_wwwroot:
+        options:
+          bare: true
+          sourceMap: true
+
+          sourceMapDir: wwwroot + '/sourceMaps'
+
+        files: [
+          expand: true
+          cwd: ''
+          src: [ wwwroot + '/**/*.coffee' ]
           dest: ''
           ext: '.js'
           extDot: 'last'
@@ -26,7 +44,7 @@ module.exports = (grunt) ->
 
     # Compile SASS
     sass:
-      compile:
+      compile_all:
         options:
           trace: true
           update: true
@@ -43,14 +61,16 @@ module.exports = (grunt) ->
 
     # Minify JavaScript
     uglify:
-      uglifyjs:
+      minify_js_all:
         options:
           compress: true
 
           sourceMap: true
+
           sourceMapName: (file) ->
             filename = "#{ file.split('/').pop() }.map"
 
+            # Seperate server files from www files
             if file.startsWith 'public_www'
               return "public_www/sourceMaps/#{filename}"
             else
@@ -70,7 +90,7 @@ module.exports = (grunt) ->
 
     # Minify CSS
     cssmin:
-      uglifycss:
+      minify_css_all:
         options:
           sourceMap: true
 
@@ -86,7 +106,7 @@ module.exports = (grunt) ->
 
     # Minify HTML
     htmlmin:
-      uglifyhtml:
+      minify_html_all:
         options:
           collapseWhitespace: true
           collapseBooleanAttributes: true
