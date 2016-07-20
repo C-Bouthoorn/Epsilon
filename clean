@@ -8,7 +8,6 @@ opts='-not ( -path ./node_modules -prune -o -path ./public_www/scripts/libs -pru
 
 # Yes I know about the -delete option of find, but it complains about -depth which I don't like
 del='-exec rm {}'
-delr='-exec rm -r {}'
 
 
 echo "Removing map files"
@@ -24,4 +23,4 @@ echo "Removing CSS files"
 find . $opts -name '*.css' $del \;
 
 echo "Removing .sass-cache"
-find . $opts -name '.sass-cache' $delr \;
+find . $opts -name '.sass-cache' -exec rm -r "{}" \;
