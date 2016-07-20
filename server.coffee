@@ -57,6 +57,8 @@ Server.log = (msg) ->
     # fallback: Use console if we don't have a logger
     console.log msg
 
+  return
+
 # Log an error
 Server.error = (err) ->
   if Server.logger
@@ -65,6 +67,8 @@ Server.error = (err) ->
   else
     # fallback: Use console if we don't have a logger
     console.error err
+
+  return
 
 # Prepare logger
 if Server.config.log && Server.config.log.enabled
@@ -75,9 +79,11 @@ if Server.config.log && Server.config.log.enabled
   # Redirect server logs to logger
   app.use (err, req, res, next) ->
     Server.logger.errorlogger(err, req, res, next)
+    return
 
   app.use (req, res, next) ->
     Server.logger.accesslogger(req, res, next)
+    return
 
   Server.log "Log enabled"
 
@@ -109,9 +115,11 @@ if Server.config.database && Server.config.database.enabled
   Server.database.conn.on 'error', (err) ->
     Server.error "Database error"
     Server.error err
+    return
 
   Server.database.conn.once 'open', ->
     Server.log "Database connected"
+    return
 
   # Schemas
   Server.database.schemas = {
@@ -181,6 +189,8 @@ app.all '/api/panel/:func?', (req, res) ->
       err: 'PANEL:INVALID_REQUEST'
     }
 
+  return
+
 
 app.all '/api/:func?', (req, res) ->
   func = req.params.func
@@ -205,10 +215,15 @@ app.all '/api/:func?', (req, res) ->
     # Call API
     api(Server, req, res)
 
+    return
+  return
+
 ## Prepare servers
 
 # External test if server is running
-app.get '/OK', (req, res) -> res.send "OK"
+app.get '/OK', (req, res) ->
+  res.send "OK"
+  return
 
 
 # Get default extensions
@@ -244,11 +259,13 @@ if Server.config.https && Server.config.https.enabled
 if Server.config.http && Server.config.http.enabled
   app.listen (Server.config.http.port || 80), ->
     Server.log "HTTP server is now listening on port #{Server.config.http.port}"
+    return
 
 # Start HTTPS server
 if Server.config.https && Server.config.https.enabled
   httpsserver.listen (Server.config.https.port || 443), ->
     Server.log "HTTPS server is now listening on port #{Server.config.https.port}"
+    return
 
 
 ## Final tasks
@@ -262,7 +279,7 @@ if Server.config.dropbackuser && Server.config.dropbackuser.enabled
   olduid = process.getuid()
 
   # Get readable names from ID's
-  userid = require('userid')
+  userid = require 'userid'
   oldname = userid.username(olduid)
   oldgroup = userid.groupname(oldgid)
 
