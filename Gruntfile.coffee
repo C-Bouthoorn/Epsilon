@@ -11,7 +11,7 @@ module.exports = (grunt) ->
     coffee:
       compile_server:
         options:
-          bare: true
+          # bare: true
           sourceMap: true
 
           sourceMapDir: './sourceMaps'
@@ -19,7 +19,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: ''
-          src: [ '!node_modules/**', './*.coffee', '!./Gruntfile.coffee', '!node_modules/**' ]
+          src: [ './**/*.coffee', '!./Gruntfile.coffee', '!node_modules/**', '!.git/**',  ]
           dest: ''
           ext: '.js'
           extDot: 'last'
@@ -52,7 +52,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: ''
-          src: [ '!node_modules/**', '**/*.scss', '**/*.sass', '!node_modules/**']
+          src: [ '**/*.scss', '**/*.sass', '!node_modules/**', '!.git/**' ]
           dest: ''
           ext: '.css'
           extDot: 'last'
@@ -81,7 +81,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: ''
-          src: [ '!node_modules/**', '**/*.js', '!**/*.min.js', '!node_modules/**' ]
+          src: [ '**/*.js', '!**/*.min.js', '!node_modules/**', '!.git/**' ]
           dest: ''
           ext: '.min.js'
           extDot: 'last'
@@ -97,7 +97,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: ''
-          src: [ '!node_modules/**', '**/*.css', '!**/*.min.css', '!node_modules/**' ]
+          src: [ '**/*.css', '!**/*.min.css', '!node_modules/**', '!.git/**' ]
           dest: ''
           ext: '.min.css'
           extDot: 'last'
@@ -126,7 +126,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: ''
-          src: [ '!node_modules/**', '**/*.html', '!**/*.min.html', '!node_modules/**' ]
+          src: [ '**/*.html', '!**/*.min.html', '!node_modules/**', '!.git/**' ]
           dest: ''
           ext: '.min.html'
           extDot: 'last'
