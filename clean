@@ -23,4 +23,4 @@ echo "Removing CSS files"
 find . $opts -name '*.css' $del \;
 
 echo "Removing .sass-cache"
-find . $opts -name '.sass-cache' -exec rm -r "{}" \;
+find . $opts -name '.sass-cache' -print0 | xargs -r0 -- rm -r
