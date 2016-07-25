@@ -179,7 +179,7 @@ app.all '/api/panel/:func?', (req, res) ->
 
     # Make sure the path can't escape the ./api/panel folder
     path = require 'path'
-    safepath = path.normalize(file).replace(/^(\.\.[\/\\])+/, '')
+    safepath = path.normalize(file).replace /^(\.\.[\/\\])+/, ''
 
     api = reqfunc('./api/panel/' + safepath)
     api(Server, req, res)
@@ -196,14 +196,14 @@ app.all '/api/:func?', (req, res) ->
   func = req.params.func
 
   # Check if path is valid
-  unless /^[a-zA-Z0-9\-]+$/.test(func)
+  unless /^[a-zA-Z0-9\-]+$/.test func
     # Invalid call!
     return
 
-  fs = require 'fs'
 
   # Check if file exists
   # TODO: Might be easy to DoS. Load dir structure once in production!
+  fs = require 'fs'
   fs.access "./api/#{func}.coffee", fs.F_OK & fs.R_OK, (err) ->
 
     if err
@@ -235,7 +235,7 @@ else
   extensions = [ 'min.html', 'min.css', 'min.js', 'html', 'css', 'js' ]
 
 # Load root folder statically
-app.use '/', express.static "#{Server.config.wwwroot}/", {
+app.use '/', express.static Server.config.wwwroot+'/', {
   extensions: extensions
 }
 
@@ -245,8 +245,8 @@ if Server.config.https && Server.config.https.enabled
   https = require 'https'
 
   httpsserver = https.createServer {
-    key:  fs.readFileSync Server.config.https.pem.key,   'utf8'
-    cert: fs.readFileSync Server.config.https.pem.cert,  'utf8'
+    key:  fs.readFileSync Server.config.https.pem.key,  'utf8'
+    cert: fs.readFileSync Server.config.https.pem.cert, 'utf8'
     ca:   ( if Server.config.https.pem.chain then fs.readFileSync(Server.config.https.pem.chain, 'utf8') else undefined )
     passphrase: Server.config.https.pem.passphrase
   }, app
@@ -301,4 +301,4 @@ else
 unless Server.config.dev
   # TODO: Dynamic
   for api in [ 'checker', 'error', 'login', 'register-available', 'register', 'test', 'panel/session' ]
-    require('./api/' + api)
+    reqfunc('./api/' + api)
