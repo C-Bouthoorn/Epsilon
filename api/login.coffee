@@ -23,6 +23,10 @@ module.exports = (server, req, res) ->
   # Get user from database
   server.database.models.User.findOne { username: username }, (err, user) ->
     if err
+      res.json {
+        err: 'LOGIN:INTERNAL_ERROR'
+      }
+
       server.error err
       return
 
@@ -41,6 +45,10 @@ module.exports = (server, req, res) ->
     hashsalt = require 'password-hash-and-salt'
     hashsalt(password).verifyAgainst db_password, (err, ok) ->
       if err
+        res.json {
+          err: 'LOGIN:INTERNAL_ERROR'
+        }
+        
         server.error err
         return
 

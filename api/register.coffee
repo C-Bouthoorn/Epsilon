@@ -14,7 +14,7 @@ module.exports = (server, req, res) ->
     server.error "[RDBERR] Register request but database not ready!"
 
     res.json {
-      err: "REGISTER:INTERNAL_ERROR"
+      err: 'REGISTER:INTERNAL_ERROR'
     }
 
     return
@@ -23,6 +23,10 @@ module.exports = (server, req, res) ->
   hashsalt = require 'password-hash-and-salt'
   hashsalt(password).hash (err, hashpassword) ->
     if err
+      res.json {
+        err: 'REGISTER:INTERNAL_ERROR'
+      }
+
       server.error err
       return
 
@@ -35,6 +39,10 @@ module.exports = (server, req, res) ->
     # Save to database
     newuser.save (err) ->
       if err
+        res.json {
+          err: 'REGISTER:INTERNAL_ERROR'
+        }
+        
         server.error err
         return
 

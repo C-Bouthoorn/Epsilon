@@ -13,7 +13,7 @@ module.exports = (server, req, res) ->
     server.error "[RADBERR] Register request but database not ready!"
 
     res.json {
-      err: "REGISTER_AVAILABLE:INTERNAL_ERROR"
+      err: 'REGISTER_AVAILABLE:INTERNAL_ERROR'
     }
 
     return
@@ -21,6 +21,10 @@ module.exports = (server, req, res) ->
   # Get the amount of users with that username
   server.database.models.User.find({ username: username }).count (err, n) ->
     if err
+      res.json {
+        err: 'REGISTER_AVAILABLE:INTERNAL_ERROR'
+      }
+
       server.error err
       return
 
