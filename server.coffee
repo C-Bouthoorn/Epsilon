@@ -105,6 +105,9 @@ Server.database = false
 if Server.config.database && Server.config.database.enabled
   mongoose = require 'mongoose'
 
+  # Set default Promise library
+  mongoose.Promise = Promise
+
   Server.database = {}
 
   # Connect
