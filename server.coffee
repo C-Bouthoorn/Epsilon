@@ -140,6 +140,12 @@ if Server.config.database && Server.config.database.enabled
 
 ## Load middlewares
 
+# Send nosniff header
+app.use (req, res, next) ->
+  res.setHeader 'X-Content-Type-Options', 'nosniff'
+  return next()
+
+
 # Load POST message parser
 bodyParser = require 'body-parser'
 app.use bodyParser.json()
