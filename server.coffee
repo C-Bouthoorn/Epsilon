@@ -242,6 +242,39 @@ app.use '/', express.static Server.config.wwwroot+'/', {
   extensions: extensions
 }
 
+# 404 page
+app.use (req, res) ->
+  res.status 404
+
+  if req.accepts('html')
+    if Server.config.page404
+      res.sendFile(Server.config.wwwroot + Server.config.page404, { root: __dirname })
+    else
+      res.send """
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>404 - Page not found</title>
+
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width">
+          <meta name="theme-color" content="#662266">
+        </head>
+          <body>
+            <h1>404 - Page not found</h1>
+
+            <p>I'm sorry, but we weren't able to find the page you just requested.</p>
+          </body>
+        </html>
+      """
+  else if req.accepts('json')
+    res.send { err: "404 - Page not found" }
+  else
+    res.send "404 - Page not found"
+
+  return
+
+
 # Prepare HTTPS server
 if Server.config.https && Server.config.https.enabled
   fs    = require 'fs'

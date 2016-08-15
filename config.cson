@@ -29,6 +29,9 @@ https:
 # Root of the webserver
 wwwroot: './public_www'
 
+# 404 page. This is relative to wwwroot
+page404: '/404.html'
+
 # Drop back to this user after starting the server
 dropbackuser:
   # Setting this to false means that the server will stay running
