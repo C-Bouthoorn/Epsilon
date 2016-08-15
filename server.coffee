@@ -146,7 +146,7 @@ app.use bodyParser.json()
 app.use bodyParser.urlencoded { extended: true }
 
 # Load session
-session = require 'express-session'
+session = require('express-session')
 mongostore = require('connect-mongo')(session)
 
 
@@ -159,7 +159,9 @@ else
   # Create new connection for database
   store = new mongostore()
 
-app.use session {
+# Secure version
+
+Server.session = {
   name: 'SESSION_ID'
   resave: false
   saveUninitialized: true
@@ -167,9 +169,25 @@ app.use session {
   store: store
 
   cookie: {
-    secure: 'auto'
+    secure: undefined  # Will get handled below
   }
 }
+
+# Insecure
+Server.session.cookie.secure = false
+Server.http_session = session Server.session
+
+# Secure
+Server.session.cookie.secure = true
+Server.https_session = session Server.session
+
+
+# Handle both sessions
+app.use (req, res, next) ->
+  if req.secure
+    return Server.https_session.call(this, req, res, next)
+  else
+    return Server.http_session.call(this, req, res, next)
 
 ## Prepare API calls
 
@@ -286,7 +304,6 @@ if Server.config.https && Server.config.https.enabled
     ca:   ( if Server.config.https.pem.chain then fs.readFileSync(Server.config.https.pem.chain, 'utf8') else undefined )
     passphrase: Server.config.https.pem.passphrase
   }, app
-
 
 
 ## Start servers
